@@ -15,16 +15,17 @@
        CUSTOM PROPERTIES
        ================================================================ */
     :root {
-      --bg:       #0A0A0F;
+      --bg:       #F5F2EC;
       --orange:   #FF5F1F;
       --yellow:   #F7E735;
       --cyan:     #00E5FF;
       --white:    #FFFFFF;
-      --g100:     #F0F0EC;
-      --g400:     #888884;
-      --g600:     #444440;
-      --g800:     #1A1A22;
-      --g900:     #111118;
+      --g100:     #1A1715;
+      --g400:     #6B6864;
+      --g600:     #B8B4AD;
+      --g800:     #EDE9E2;
+      --g900:     #FFFFFF;
+      --cyan-ink: #0091A8;
 
       --ff-title: 'Bebas Neue', sans-serif;
       --ff-body:  'DM Sans', sans-serif;
@@ -46,7 +47,7 @@
 
     body {
       background: var(--bg);
-      color: var(--white);
+      color: var(--g100);
       font-family: var(--ff-body);
       font-size: 16px;
       line-height: 1.6;
@@ -64,7 +65,7 @@
 
     ::-webkit-scrollbar       { width: 5px; }
     ::-webkit-scrollbar-track { background: var(--bg); }
-    ::-webkit-scrollbar-thumb { background: var(--g600); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb { background: var(--g400); border-radius: 3px; }
     ::-webkit-scrollbar-thumb:hover { background: var(--orange); }
 
     /* ================================================================
@@ -159,8 +160,9 @@
       transition: background .4s ease, backdrop-filter .4s ease;
     }
     .nav.scrolled {
-      background: rgba(10,10,15,.92);
-      backdrop-filter: blur(14px);
+      background: rgba(245,242,236,.95);
+      backdrop-filter: blur(16px);
+      box-shadow: 0 1px 0 rgba(0,0,0,.08);
     }
     .nav-inner {
       width: 100%;
@@ -184,7 +186,7 @@
       display: grid;
       place-items: center;
       font-size: 1.05rem;
-      color: var(--bg);
+      color: #FFFFFF;
       flex-shrink: 0;
     }
     /* Desktop links */
@@ -212,7 +214,7 @@
       transform-origin: left;
       transition: transform .3s ease;
     }
-    .nav-links a:hover { color: var(--white); }
+    .nav-links a:hover { color: var(--g100); }
     .nav-links a:hover::after { transform: scaleX(1); }
     .nav-cta {
       background: var(--orange);
@@ -233,7 +235,7 @@
     .nav-burger span {
       display: block;
       width: 26px; height: 2px;
-      background: var(--white);
+      background: var(--g100);
       transition: transform .3s ease, opacity .3s ease;
     }
     .nav-burger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
@@ -243,8 +245,9 @@
     .nav-mobile {
       position: fixed;
       top: var(--nav-h); left: 0; right: 0;
-      background: rgba(10,10,15,.97);
+      background: rgba(245,242,236,.98);
       backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(0,0,0,.08);
       padding: 2rem clamp(1.5rem, 5vw, 4rem) 3rem;
       display: flex;
       flex-direction: column;
@@ -258,6 +261,7 @@
       font-family: var(--ff-title);
       font-size: 2.4rem;
       letter-spacing: .05em;
+      color: var(--g100);
       transition: color .3s ease;
     }
     .nav-mobile a:hover { color: var(--orange); }
@@ -285,7 +289,7 @@
       width: 55vw; height: 55vw;
       max-width: 700px; max-height: 700px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(255,95,31,.09) 0%, transparent 68%);
+      background: radial-gradient(circle, rgba(255,95,31,.14) 0%, transparent 68%);
       pointer-events: none;
     }
     .hero::after {
@@ -295,7 +299,7 @@
       width: 40vw; height: 40vw;
       max-width: 500px; max-height: 500px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(0,229,255,.06) 0%, transparent 68%);
+      background: radial-gradient(circle, rgba(0,229,255,.1) 0%, transparent 68%);
       pointer-events: none;
     }
     .hero-inner {
@@ -348,7 +352,7 @@
       margin-bottom: 1.5rem;
     }
     .hero-title .t-outline {
-      -webkit-text-stroke: 2px var(--white);
+      -webkit-text-stroke: 2px var(--g100);
       color: transparent;
     }
     .hero-sub {
@@ -390,10 +394,10 @@
       align-items: center;
       gap: .5rem;
       background: transparent;
-      color: var(--white);
+      color: var(--g100);
       padding: .85rem 2rem;
       border-radius: 4px;
-      border: 1px solid rgba(255,255,255,.18);
+      border: 1px solid rgba(0,0,0,.2);
       font-family: var(--ff-mono);
       font-size: .78rem;
       letter-spacing: .1em;
@@ -401,8 +405,8 @@
       transition: border-color .3s ease, color .3s ease, transform .3s ease;
     }
     .btn-sec:hover {
-      border-color: var(--cyan);
-      color: var(--cyan);
+      border-color: var(--orange);
+      color: var(--orange);
       transform: translateY(-2px);
     }
     /* Scroll indicator */
@@ -414,11 +418,11 @@
       font-size: .68rem;
       letter-spacing: .16em;
       text-transform: uppercase;
-      color: var(--g600);
+      color: var(--g400);
     }
     .scroll-line {
       width: 40px; height: 1px;
-      background: linear-gradient(to right, var(--g600), transparent);
+      background: linear-gradient(to right, var(--g400), transparent);
       animation: scrollAnim 2.2s ease infinite;
     }
     @keyframes scrollAnim {
@@ -431,41 +435,42 @@
     .hero-video {
       position: relative;
       aspect-ratio: 16/9;
-      border: 2px solid rgba(255,95,31,.28);
+      border: 2px solid rgba(255,95,31,.35);
       border-radius: 14px;
       overflow: hidden;
-      background: var(--g900);
+      background: var(--white);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       gap: 1rem;
+      box-shadow: 0 20px 60px rgba(0,0,0,.08);
     }
     .hero-video::before {
       content: '';
       position: absolute; inset: 0;
-      background: linear-gradient(135deg, rgba(255,95,31,.06) 0%, rgba(0,229,255,.06) 100%);
+      background: linear-gradient(135deg, rgba(255,95,31,.05) 0%, rgba(0,229,255,.05) 100%);
     }
     /* Grid texture inside video */
     .hero-video::after {
       content: '';
       position: absolute; inset: 0;
       background-image:
-        linear-gradient(rgba(255,95,31,.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,95,31,.04) 1px, transparent 1px);
+        linear-gradient(rgba(26,23,21,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(26,23,21,.04) 1px, transparent 1px);
       background-size: 32px 32px;
     }
     .vid-tag {
       position: absolute;
       top: 12px; left: 12px;
-      background: rgba(0,229,255,.15);
-      border: 1px solid rgba(0,229,255,.3);
+      background: rgba(0,145,168,.12);
+      border: 1px solid rgba(0,145,168,.3);
       padding: .22rem .65rem;
       border-radius: 4px;
       font-family: var(--ff-mono);
       font-size: .62rem;
       letter-spacing: .1em;
-      color: var(--cyan);
+      color: var(--cyan-ink);
       z-index: 1;
     }
     .vid-corner {
@@ -504,6 +509,9 @@
       letter-spacing: .15em;
       text-transform: uppercase;
       color: var(--g400);
+      background: rgba(255,255,255,.7);
+      padding: .2rem .6rem;
+      border-radius: 4px;
     }
 
     @media (max-width: 960px) {
@@ -542,13 +550,13 @@
       font-family: var(--ff-title);
       font-size: 1.1rem;
       letter-spacing: .1em;
-      color: var(--bg);
+      color: #1A1715;
     }
     .m-dot {
       width: 6px; height: 6px;
       border-radius: 50%;
-      background: var(--bg);
-      opacity: .4;
+      background: #1A1715;
+      opacity: .35;
       flex-shrink: 0;
     }
     @keyframes marquee {
@@ -618,13 +626,13 @@
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 1.25rem;
-      border-top: 1px solid rgba(255,255,255,.07);
+      border-top: 1px solid rgba(0,0,0,.1);
       padding-top: 2rem;
     }
     .stat-val {
       font-family: var(--ff-title);
       font-size: 2.1rem;
-      color: var(--yellow);
+      color: var(--orange);
       line-height: 1;
     }
     .stat-lbl {
@@ -698,6 +706,7 @@
       font-family: var(--ff-title);
       font-size: clamp(1.2rem, 2.4vw, 1.85rem);
       letter-spacing: .02em;
+      color: #FFFFFF;
     }
     .p-feat-badge {
       position: absolute;
@@ -768,9 +777,10 @@
       pointer-events: auto;
     }
     .modal {
-      background: var(--g900);
-      border: 1px solid rgba(255,255,255,.07);
+      background: var(--white);
+      border: 1px solid rgba(0,0,0,.09);
       border-radius: 16px;
+      box-shadow: 0 24px 80px rgba(0,0,0,.15);
       width: 100%;
       max-width: 640px;
       max-height: 88vh;
@@ -789,14 +799,14 @@
     .modal-close-btn {
       width: 36px; height: 36px;
       border-radius: 50%;
-      background: rgba(255,255,255,.07);
+      background: rgba(0,0,0,.06);
       display: grid;
       place-items: center;
       cursor: none;
       flex-shrink: 0;
       transition: background .2s ease;
     }
-    .modal-close-btn:hover { background: rgba(255,95,31,.3); }
+    .modal-close-btn:hover { background: rgba(255,95,31,.15); }
     .modal-lbl {
       font-family: var(--ff-mono);
       font-size: .68rem;
@@ -823,8 +833,8 @@
       gap: .85rem;
     }
     .spec {
-      background: rgba(255,255,255,.03);
-      border: 1px solid rgba(255,255,255,.06);
+      background: rgba(0,0,0,.03);
+      border: 1px solid rgba(0,0,0,.08);
       padding: .8rem 1rem;
       border-radius: 8px;
     }
@@ -841,8 +851,8 @@
       font-weight: 500;
     }
     .c-or { color: var(--orange); }
-    .c-cy { color: var(--cyan); }
-    .c-ye { color: var(--yellow); }
+    .c-cy { color: var(--cyan-ink); }
+    .c-ye { color: #B07A00; }
 
     /* ================================================================
        SERVICES
@@ -855,16 +865,18 @@
       margin-top: 3rem;
     }
     .svc-card {
-      background: rgba(255,255,255,.03);
-      border: 1px solid rgba(255,255,255,.07);
+      background: var(--white);
+      border: 1px solid rgba(0,0,0,.09);
       border-radius: 12px;
       padding: 2rem;
       cursor: none;
-      transition: border-color .3s ease, background .3s ease, transform .3s ease;
+      transition: border-color .3s ease, background .3s ease, transform .3s ease,
+                  box-shadow .3s ease;
     }
     .svc-card:hover {
       border-color: rgba(255,95,31,.4);
-      background: rgba(255,95,31,.05);
+      background: var(--white);
+      box-shadow: 0 8px 32px rgba(255,95,31,.1);
       transform: translateY(-4px);
     }
     .svc-icon {
@@ -890,9 +902,9 @@
     }
     .svc-tag {
       display: inline-block;
-      background: rgba(0,229,255,.08);
-      border: 1px solid rgba(0,229,255,.2);
-      color: var(--cyan);
+      background: rgba(0,145,168,.1);
+      border: 1px solid rgba(0,145,168,.25);
+      color: var(--cyan-ink);
       padding: .18rem .6rem;
       border-radius: 4px;
       font-family: var(--ff-mono);
@@ -968,11 +980,11 @@
       color: var(--g400);
     }
     .fi, .fs, .ft {
-      background: rgba(255,255,255,.04);
-      border: 1px solid rgba(255,255,255,.1);
+      background: var(--white);
+      border: 1px solid rgba(0,0,0,.14);
       border-radius: 8px;
       padding: .85rem 1rem;
-      color: var(--white);
+      color: var(--g100);
       font-family: var(--ff-body);
       font-size: .95rem;
       outline: none;
@@ -984,7 +996,7 @@
       background: rgba(255,95,31,.05);
     }
     .fi::placeholder, .ft::placeholder { color: var(--g600); }
-    .fs option { background: var(--g900); }
+    .fs option { background: var(--white); color: var(--g100); }
     .ft { resize: vertical; min-height: 140px; }
     .f-submit {
       display: flex;
@@ -1018,8 +1030,8 @@
        FOOTER
        ================================================================ */
     .footer {
-      background: var(--g900);
-      border-top: 1px solid rgba(255,255,255,.06);
+      background: var(--white);
+      border-top: 1px solid rgba(0,0,0,.09);
       padding: 3rem clamp(1.5rem, 5vw, 4rem);
     }
     .footer-top {
@@ -1041,7 +1053,7 @@
       font-family: var(--ff-mono);
       font-size: .66rem;
       letter-spacing: .12em;
-      color: var(--g600);
+      color: var(--g400);
     }
     .socials {
       display: flex;
@@ -1050,8 +1062,8 @@
     .soc-link {
       width: 42px; height: 42px;
       border-radius: 8px;
-      background: rgba(255,255,255,.04);
-      border: 1px solid rgba(255,255,255,.08);
+      background: rgba(0,0,0,.04);
+      border: 1px solid rgba(0,0,0,.1);
       display: grid;
       place-items: center;
       transition: background .3s ease, border-color .3s ease, transform .3s ease;
@@ -1066,7 +1078,7 @@
       max-width: 1200px;
       margin: 2rem auto 0;
       padding-top: 2rem;
-      border-top: 1px solid rgba(255,255,255,.06);
+      border-top: 1px solid rgba(0,0,0,.09);
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -1077,7 +1089,7 @@
       font-family: var(--ff-mono);
       font-size: .66rem;
       letter-spacing: .08em;
-      color: var(--g600);
+      color: var(--g400);
     }
     .f-made span { color: var(--orange); }
   </style>
@@ -1210,9 +1222,9 @@
         <div class="about-svg-wrap">
           <svg viewBox="0 0 460 460" fill="none" xmlns="http://www.w3.org/2000/svg">
             <!-- bg circle -->
-            <circle cx="230" cy="230" r="210" fill="#111118"/>
+            <circle cx="230" cy="230" r="210" fill="#EDE9E2"/>
             <!-- outer ring -->
-            <circle cx="230" cy="230" r="200" fill="none" stroke="rgba(255,95,31,.12)" stroke-width="1"/>
+            <circle cx="230" cy="230" r="200" fill="none" stroke="rgba(255,95,31,.2)" stroke-width="1"/>
 
             <!-- Film strip top -->
             <rect x="50"  y="80" width="360" height="56" rx="4" fill="none" stroke="rgba(255,95,31,.25)" stroke-width="1.5"/>
@@ -1234,18 +1246,18 @@
             <rect x="388" y="107" width="10" height="10" rx="3" fill="rgba(255,95,31,.35)"/>
 
             <!-- Character body -->
-            <ellipse cx="230" cy="305" rx="52" ry="70" fill="#1A1A22" stroke="rgba(255,95,31,.7)" stroke-width="1.5"/>
+            <ellipse cx="230" cy="305" rx="52" ry="70" fill="#FFFFFF" stroke="rgba(255,95,31,.85)" stroke-width="1.5"/>
 
             <!-- Character head -->
-            <circle cx="230" cy="208" r="45" fill="#1A1A22" stroke="rgba(255,95,31,.7)" stroke-width="1.5"/>
+            <circle cx="230" cy="208" r="45" fill="#FFFFFF" stroke="rgba(255,95,31,.85)" stroke-width="1.5"/>
 
             <!-- Eyes -->
             <circle cx="214" cy="202" r="11" fill="#00E5FF" opacity=".75"/>
-            <circle cx="214" cy="202" r="5.5" fill="#0A0A0F"/>
+            <circle cx="214" cy="202" r="5.5" fill="#1A1715"/>
             <circle cx="216" cy="200" r="2" fill="white"/>
 
             <circle cx="246" cy="202" r="11" fill="#00E5FF" opacity=".75"/>
-            <circle cx="246" cy="202" r="5.5" fill="#0A0A0F"/>
+            <circle cx="246" cy="202" r="5.5" fill="#1A1715"/>
             <circle cx="248" cy="200" r="2" fill="white"/>
 
             <!-- Smile -->
@@ -1254,8 +1266,8 @@
             <!-- Arms -->
             <line x1="178" y1="280" x2="130" y2="255" stroke="rgba(255,95,31,.65)" stroke-width="3" stroke-linecap="round"/>
             <line x1="282" y1="280" x2="330" y2="255" stroke="rgba(255,95,31,.65)" stroke-width="3" stroke-linecap="round"/>
-            <circle cx="130" cy="255" r="13" fill="#1A1A22" stroke="rgba(255,95,31,.65)" stroke-width="1.5"/>
-            <circle cx="330" cy="255" r="13" fill="#1A1A22" stroke="rgba(255,95,31,.65)" stroke-width="1.5"/>
+            <circle cx="130" cy="255" r="13" fill="#FFFFFF" stroke="rgba(255,95,31,.85)" stroke-width="1.5"/>
+            <circle cx="330" cy="255" r="13" fill="#FFFFFF" stroke="rgba(255,95,31,.85)" stroke-width="1.5"/>
 
             <!-- Play button on body -->
             <path d="M217 295 L250 312 L217 329 Z" fill="#F7E735" opacity=".85"/>
@@ -1466,7 +1478,7 @@
         </div>
         <button class="modal-close-btn" onclick="closeModal()" aria-label="Fechar">
           <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
-            <path d="M1 1L12 12M12 1L1 12" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M1 1L12 12M12 1L1 12" stroke="#1A1715" stroke-width="1.5" stroke-linecap="round"/>
           </svg>
         </button>
       </div>
@@ -1678,25 +1690,25 @@
       <div class="socials">
         <a href="#" class="soc-link" aria-label="Facebook" target="_blank" rel="noopener noreferrer">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-            <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z" stroke="#888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z" stroke="#6B6864" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </a>
         <a href="#" class="soc-link" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-            <rect x="2" y="2" width="20" height="20" rx="5" stroke="#888" stroke-width="1.5"/>
-            <circle cx="12" cy="12" r="4" stroke="#888" stroke-width="1.5"/>
+            <rect x="2" y="2" width="20" height="20" rx="5" stroke="#6B6864" stroke-width="1.5"/>
+            <circle cx="12" cy="12" r="4" stroke="#6B6864" stroke-width="1.5"/>
             <circle cx="17.5" cy="6.5" r="1" fill="#888"/>
           </svg>
         </a>
         <a href="#" class="soc-link" aria-label="YouTube" target="_blank" rel="noopener noreferrer">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-            <path d="M22.54 6.42a2.78 2.78 0 00-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 001.46 6.42 29 29 0 001 12a29 29 0 00.46 5.58A2.78 2.78 0 003.41 19.54C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 001.95-1.96A29 29 0 0023 12a29 29 0 00-.46-5.58z" stroke="#888" stroke-width="1.5"/>
-            <polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" stroke="#888" stroke-width="1.5" stroke-linejoin="round"/>
+            <path d="M22.54 6.42a2.78 2.78 0 00-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 001.46 6.42 29 29 0 001 12a29 29 0 00.46 5.58A2.78 2.78 0 003.41 19.54C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 001.95-1.96A29 29 0 0023 12a29 29 0 00-.46-5.58z" stroke="#6B6864" stroke-width="1.5"/>
+            <polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" stroke="#6B6864" stroke-width="1.5" stroke-linejoin="round"/>
           </svg>
         </a>
         <a href="#" class="soc-link" aria-label="Vimeo" target="_blank" rel="noopener noreferrer">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-            <path d="M21.9 7.24c-.09 2.04-1.52 4.83-4.28 8.36C14.75 19.24 12.37 21 10.34 21c-1.27 0-2.35-1.17-3.23-3.51L5.5 12.55C4.88 10.2 4.22 9.03 3.5 9.03c-.16 0-.71.33-1.66 1L1 8.83c1.04-.92 2.07-1.84 3.08-2.76C5.5 4.85 6.56 4.18 7.39 4.1c2.06-.2 3.33 1.21 3.81 4.23.51 3.23.87 5.24 1.07 6.02.6 2.7 1.25 4.05 1.96 4.05.55 0 1.38-.87 2.48-2.62 1.1-1.74 1.69-3.07 1.77-3.97.16-1.51-.43-2.26-1.77-2.26-.63 0-1.28.14-1.95.44 1.3-4.24 3.77-6.3 7.42-6.17z" stroke="#888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M21.9 7.24c-.09 2.04-1.52 4.83-4.28 8.36C14.75 19.24 12.37 21 10.34 21c-1.27 0-2.35-1.17-3.23-3.51L5.5 12.55C4.88 10.2 4.22 9.03 3.5 9.03c-.16 0-.71.33-1.66 1L1 8.83c1.04-.92 2.07-1.84 3.08-2.76C5.5 4.85 6.56 4.18 7.39 4.1c2.06-.2 3.33 1.21 3.81 4.23.51 3.23.87 5.24 1.07 6.02.6 2.7 1.25 4.05 1.96 4.05.55 0 1.38-.87 2.48-2.62 1.1-1.74 1.69-3.07 1.77-3.97.16-1.51-.43-2.26-1.77-2.26-.63 0-1.28.14-1.95.44 1.3-4.24 3.77-6.3 7.42-6.17z" stroke="#6B6864" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </a>
       </div>
