@@ -1,0 +1,43 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Editor / IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Node (caso use ferramentas de build no futuro)
+node_modules/
+dist/
+.cache/
+.parcel-cache/
+
+# Env / segredos
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+npm-debug.log*
+
+# Build outputs
+/build
+/out
+/public/build
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Thumbnails
+*.thumb
+
+# CNAME (gerado automaticamente pelo GitHub Pages se usar domínio)
+# CNAME
