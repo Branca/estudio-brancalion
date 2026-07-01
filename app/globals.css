@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-cream text-ink antialiased;
+  font-family: var(--font-dm-sans), sans-serif;
+}
+
+/* Garante que o hero ocupe a altura total considerando o header fixo */
+.hero-full {
+  height: 100dvh;
+  min-height: 600px;
+}

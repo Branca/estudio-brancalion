@@ -11,11 +11,14 @@
 *.swo
 *~
 
-# Node (caso use ferramentas de build no futuro)
+# Node / Next.js
 node_modules/
 dist/
 .cache/
 .parcel-cache/
+.next/
+out/
+next-env.d.ts
 
 # Env / segredos
 .env
