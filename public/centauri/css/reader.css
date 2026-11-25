@@ -1,0 +1,841 @@
+/* ============================================================
+   CENTAURI — LEITOR DE PÁGINAS  (reader.css)
+   Importa os tokens de :root definidos em style.css.
+   mobile-first · CSS Grid · fácil de duplicar por página
+   ============================================================ */
+
+
+/* ── Tokens locais do leitor ─────────────────────────────── */
+:root {
+  --panel-gap:      clamp(0.5rem, 1.5vw, 1rem);   /* gutter entre quadros  */
+  --panel-border:   3px solid #111;                 /* borda dos quadros     */
+  --panel-shadow:   0 4px 24px rgba(0, 0, 0, 0.7); /* sombra dos quadros    */
+  --reader-pad:     clamp(1rem, 3vw, 2rem);          /* padding lateral geral */
+  --reader-max-w:   1400px;                          /* largura máxima        */
+
+  /* Aspect-ratios dos quadros (ajustar aqui afeta todos) */
+  --ratio-opening:  3 / 1;    /* quadro de abertura: bem largo   */
+  --ratio-sm:       4 / 3;    /* quadros menores: landscape suave */
+}
+
+
+/* ── Reset de botões usados como controles de navegação ─── */
+/* <button> substituiu <a> nos controles do leitor (SPA)     */
+.reader-back,
+.reader-next-hint,
+.page-nav__btn {
+  -webkit-appearance: none;
+  appearance: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font: inherit;
+  text-decoration: none;
+}
+
+
+/* ── ① Fundo da página (fixo, atrás de tudo) ────────────── */
+.page-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+
+  /* ─ PLACEHOLDER ─────────────────────────────────────────────
+     Substituir por:
+       background-image: url('../assets/pages/p01-bg.jpg');
+       background-size: cover;
+       background-position: center;
+     e remover o gradiente abaixo.
+  ──────────────────────────────────────────────────────────── */
+  background:
+    radial-gradient(ellipse 90% 80% at 50% 50%, #0d1520 0%, #07060f 100%);
+  background-size: cover;
+  background-position: center;
+}
+
+/* Overlay sutil pra garantir contraste dos quadros sobre o fundo */
+.page-bg__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+}
+
+
+/* ── ② Wrapper do leitor ─────────────────────────────────── */
+.reader {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+
+  width: 100%;
+  max-width: var(--reader-max-w);
+  margin: 0 auto;
+  padding: 0 var(--reader-pad);
+}
+
+
+/* ── ③ Header ────────────────────────────────────────────── */
+.reader-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+
+  padding: max(0.75rem, env(safe-area-inset-top, 0.75rem)) 0 0.75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  margin-bottom: var(--panel-gap);
+}
+
+.reader-back,
+.reader-next-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  font-family: var(--font-body);
+  font-size: clamp(0.75rem, 2vw, 0.9rem);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--c-muted);
+  text-decoration: none;
+  transition: color var(--transition);
+  flex-shrink: 0;
+}
+
+.reader-back svg,
+.reader-next-hint svg {
+  width: 1em;
+  height: 1em;
+}
+
+.reader-back:hover,
+.reader-next-hint:hover { color: var(--c-accent); }
+
+.reader-indicator {
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 3vw, 1.35rem);
+  letter-spacing: 0.12em;
+  color: var(--c-text);
+  white-space: nowrap;
+}
+
+
+/* ── ④ Grid de quadros ───────────────────────────────────── */
+
+/* ─── MOBILE (padrão): todos empilhados, 1 coluna ──────────
+   ┌─────────────┐
+   │  Q1 abertura│
+   ├─────────────┤
+   │     Q2      │
+   ├─────────────┤
+   │     Q3      │
+   ├─────────────┤
+   │     Q4      │
+   └─────────────┘
+──────────────────────────────────────────────────────────── */
+.panels-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--panel-gap);
+  flex: 1; /* ocupa espaço disponível empurrando footer */
+}
+
+
+/* Variante invertida: 3 quadros pequenos primeiro, abertura larga por último
+   Aplicar adicionando a classe .panels-grid--inverted ao .panels-grid */
+.panels-grid--inverted .panel--opening {
+  order: 10;
+}
+
+
+/* ─── TABLET (≥ 640px): 2 colunas ──────────────────────────
+   ┌─────────────────────┐
+   │   Q1 abertura (2/2) │
+   ├──────────┬──────────┤
+   │    Q2    │    Q3    │
+   ├──────────┴──────────┤
+   │      Q4 (2/2)       │
+   └─────────────────────┘
+──────────────────────────────────────────────────────────── */
+@media (min-width: 640px) {
+  .panels-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  /* Quadro de abertura: ocupa as 2 colunas */
+  .panel--opening {
+    grid-column: 1 / -1;
+  }
+
+  /* Último quadro menor: ocupa as 2 colunas (vai sozinho na linha 3) */
+  .panel--sm:last-child {
+    grid-column: 1 / -1;
+  }
+
+  /* Ao ocupar largura toda, o Q4 fica proporcional ao Q1 */
+  .panel--sm:last-child .panel__art {
+    aspect-ratio: var(--ratio-opening);
+  }
+}
+
+
+/* ─── DESKTOP (≥ 1024px): 3 colunas ────────────────────────
+   ┌───────────────────────────────┐
+   │       Q1 abertura (3/3)       │
+   ├──────────┬──────────┬─────────┤
+   │    Q2    │    Q3    │   Q4    │
+   └──────────┴──────────┴─────────┘
+──────────────────────────────────────────────────────────── */
+@media (min-width: 1024px) {
+  .panels-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  /* Quadro de abertura: ocupa as 3 colunas */
+  .panel--opening {
+    grid-column: 1 / -1;
+  }
+
+  /* Q4 volta ao tamanho normal (1 coluna) no desktop */
+  .panel--sm:last-child {
+    grid-column: auto;
+  }
+
+  .panel--sm:last-child .panel__art {
+    aspect-ratio: var(--ratio-sm);
+  }
+}
+
+
+/* ── ⑤ Quadro individual ─────────────────────────────────── */
+.panel {
+  /* Borda preta estilo HQ impressa */
+  outline: var(--panel-border);
+  outline-offset: -1px;
+  box-shadow: var(--panel-shadow);
+  overflow: hidden;
+  position: relative;
+  background: #000;
+}
+
+/* Arte dentro do quadro (placeholder ou <img> futura) */
+.panel__art {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  min-height: 100px;
+}
+
+.panel--opening .panel__art {
+  aspect-ratio: var(--ratio-opening);
+  min-height: 120px;
+}
+
+.panel--sm .panel__art {
+  aspect-ratio: var(--ratio-sm);
+  min-height: 140px;
+}
+
+/* ─ Cores placeholder — uma por quadro (via nth-child) ─────
+   Substituir quando tiver arte real: trocar background por
+   background-image: url('../assets/pages/p01-qN.jpg');
+   background-size: cover; background-position: center top;
+──────────────────────────────────────────────────────────── */
+
+/* Q1 — abertura: azul-marinho profundo */
+.panel:nth-child(1) .panel__art {
+  background: linear-gradient(145deg, #0a1628 0%, #14263d 100%);
+}
+
+/* Q2 — vinheta quente */
+.panel:nth-child(2) .panel__art {
+  background: linear-gradient(145deg, #1c0a0a 0%, #3a1010 100%);
+}
+
+/* Q3 — floresta/natural */
+.panel:nth-child(3) .panel__art {
+  background: linear-gradient(145deg, #091c0e 0%, #153320 100%);
+}
+
+/* Q4 — roxo/misterioso */
+.panel:nth-child(4) .panel__art {
+  background: linear-gradient(145deg, #14091c 0%, #2a1240 100%);
+}
+
+/* ── Arte real por página ────────────────────────────────── */
+
+/* Pág. 1 — grade 1 (antiga pág. 1) */
+[data-page="1"] .panels-grid:nth-of-type(1) .panel:nth-child(1) .panel__art {
+  background-image: url('../assets/images/quadro-001.jpg');
+  background-size: cover; background-position: center top;
+}
+[data-page="1"] .panels-grid:nth-of-type(1) .panel:nth-child(2) .panel__art {
+  background-image: url('../assets/images/quadro02.jpg');
+  background-size: cover; background-position: center top;
+}
+[data-page="1"] .panels-grid:nth-of-type(1) .panel:nth-child(3) .panel__art {
+  background-image: url('../assets/images/quadro03.jpg');
+  background-size: cover; background-position: center top;
+}
+[data-page="1"] .panels-grid:nth-of-type(1) .panel:nth-child(4) .panel__art {
+  background-image: url('../assets/images/quadro04.jpg');
+  background-size: cover; background-position: center top;
+}
+
+/* Pág. 1 — grade 2 (antiga pág. 2) */
+[data-page="1"] .panels-grid:nth-of-type(2) .panel:nth-child(1) .panel__art {
+  background-image: url('../assets/images/quadro05.jpg');
+  background-size: cover; background-position: center top;
+}
+[data-page="1"] .panels-grid:nth-of-type(2) .panel:nth-child(2) .panel__art {
+  background-image: url('../assets/images/quadro06.jpg');
+  background-size: cover; background-position: center top;
+}
+[data-page="1"] .panels-grid:nth-of-type(2) .panel:nth-child(4) .panel__art {
+  background-image: url('../assets/images/quadro 08.jpg');
+  background-size: cover; background-position: center top;
+}
+
+/* Pág. 2 — grade 2 — Q1 (antiga pág. 4, quadro13) */
+[data-page="2"] .panels-grid:nth-of-type(2) .panel:nth-child(1) .panel__art {
+  background-image: url('../assets/images/quadro13.jpg');
+  background-size: cover; background-position: center top;
+}
+
+/* ── Balão de texto retangular ───────────────────────────── */
+.panel-balloon {
+  position: absolute;
+  bottom: clamp(0.5rem, 2.5%, 1.25rem);
+  right: clamp(0.5rem, 2.5%, 1.25rem);
+  text-align: center;
+
+  /* Largura fluida: cresce com o painel até um máximo legível */
+  width: clamp(140px, 45%, 360px);
+
+  background: #fff;
+  border: 2.5px solid #111;
+  border-radius: 6px;
+  padding: clamp(0.35rem, 1.2vw, 0.65rem) clamp(0.5rem, 1.8vw, 0.9rem);
+
+  font-family: var(--font-body);
+  font-size: clamp(0.7rem, 1.6vw, 0.95rem);
+  line-height: 1.45;
+  color: #111;
+
+  /* Leve sombra para destacar do fundo escuro do quadro */
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.55);
+
+  /* Garante que o texto não transborda */
+  word-break: break-word;
+  hyphens: auto;
+
+  /* Cria contexto de empilhamento — aparece acima dos conectores */
+  z-index: 1;
+}
+
+.panel-balloon p { margin: 0; }
+.panel-balloon strong { font-weight: 700; }
+
+/* Variante de posição para balões de narração no topo-esquerdo */
+.panel-balloon--top-left {
+  top:    clamp(0.5rem, 2.5%, 1.25rem);
+  left:   clamp(0.5rem, 2.5%, 1.25rem);
+  bottom: auto;
+  right:  auto;
+}
+
+
+/* ── Balão de FALA com rabicho triangular ────────────────── */
+.panel-balloon--speech {
+  /* Reseta os valores herdados da base (.panel-balloon define bottom+right
+     para o balão de narração do Q1 — aqui zeramos antes das classes pos-* agirem) */
+  top: auto;
+  right: auto;
+  bottom: auto;
+  left: auto;
+  width: clamp(110px, 40%, 200px);
+  text-align: center;
+}
+
+/* — Posicionamento separado da direção do rabicho —
+   Combine livremente: ex. class="panel-balloon--speech tail-bl pos-tl" */
+
+.pos-tl { top: clamp(0.4rem, 5%, 0.9rem);  left:  clamp(0.4rem, 5%, 0.9rem); }
+.pos-tr { top: clamp(0.4rem, 5%, 0.9rem);  right: clamp(0.4rem, 5%, 0.9rem); }
+.pos-ml { top: 36%;                          left:  clamp(0.4rem, 5%, 0.9rem); }
+.pos-mr { top: 36%;                          right: clamp(0.4rem, 5%, 0.9rem); }
+.pos-bl { bottom: clamp(1.2rem, 14%, 2rem); left:  clamp(0.4rem, 5%, 0.9rem); }
+.pos-br { bottom: clamp(1.2rem, 14%, 2rem); right: clamp(0.4rem, 5%, 0.9rem); }
+
+/* — Rabicho: triângulo com contorno preto + miolo branco —
+   Usa ::after para a sombra/borda e ::before para o preenchimento.
+   A ordem z-index garante que o branco fica sobre o preto. */
+
+/* Borda do rabicho (preto) */
+.panel-balloon--speech::after {
+  content: '';
+  position: absolute;
+  bottom: -14px;
+  width: 0;
+  height: 0;
+}
+
+/* Preenchimento do rabicho (branco) */
+.panel-balloon--speech::before {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  width: 0;
+  height: 0;
+  z-index: 1;
+}
+
+/* tail-bl: rabicho aponta para baixo-esquerda */
+.tail-bl::after  { left: 14px; border-top: 14px solid #111; border-right: 18px solid transparent; }
+.tail-bl::before { left: 16px; border-top: 11px solid #fff; border-right: 14px solid transparent; }
+
+/* tail-br: rabicho aponta para baixo-direita */
+.tail-br::after  { right: 14px; border-top: 14px solid #111; border-left: 18px solid transparent; }
+.tail-br::before { right: 16px; border-top: 11px solid #fff; border-left: 14px solid transparent; }
+
+/* tail-br-flip: mesma posição de tail-br mas espelhado horizontalmente */
+.tail-br-flip::after  { right: 14px; border-top: 14px solid #111; border-right: 18px solid transparent; }
+.tail-br-flip::before { right: 16px; border-top: 11px solid #fff; border-right: 14px solid transparent; }
+
+/* tail-bc: rabicho centralizado na base */
+.tail-bc::after  { left: 50%; transform: translateX(-50%); border-top: 14px solid #111; border-left: 9px solid transparent; border-right: 9px solid transparent; }
+.tail-bc::before { left: 50%; transform: translateX(-50%); border-top: 11px solid #fff; border-left: 7px solid transparent; border-right: 7px solid transparent; }
+
+/* tail-left: rabicho lateral apontando para a esquerda */
+.tail-left::after  { bottom: auto; top: 50%; left: -14px; transform: translateY(-50%); border-right: 14px solid #111; border-top: 9px solid transparent; border-bottom: 9px solid transparent; }
+.tail-left::before { bottom: auto; top: 50%; left: -10px; transform: translateY(-50%); border-right: 11px solid #fff; border-top: 7px solid transparent; border-bottom: 7px solid transparent; }
+
+/* tail-right: rabicho lateral apontando para a direita */
+.tail-right::after  { bottom: auto; top: 50%; right: -14px; transform: translateY(-50%); border-left: 14px solid #111; border-top: 9px solid transparent; border-bottom: 9px solid transparent; }
+.tail-right::before { bottom: auto; top: 50%; right: -10px; transform: translateY(-50%); border-left: 11px solid #fff; border-top: 7px solid transparent; border-bottom: 7px solid transparent; }
+
+/* tail-ul / tail-ur: rabicho aponta para CIMA (balões na parte de baixo do quadro) */
+.panel-balloon--speech.tail-ul::after,
+.panel-balloon--speech.tail-ur::after {
+  bottom: auto;
+  top: -14px;
+}
+.panel-balloon--speech.tail-ul::before,
+.panel-balloon--speech.tail-ur::before {
+  bottom: auto;
+  top: -10px;
+}
+
+/* tail-ul: rabicho aponta para cima-esquerda */
+.tail-ul::after  { left: 14px; border-bottom: 14px solid #111; border-right: 18px solid transparent; }
+.tail-ul::before { left: 16px; border-bottom: 11px solid #fff; border-right: 14px solid transparent; }
+
+/* tail-bl-flip: rabicho inferior esquerdo com triângulo invertido 180° */
+.tail-bl-flip::after  { left: 14px; border-bottom: 14px solid #111; border-left: 18px solid transparent; }
+.tail-bl-flip::before { left: 16px; border-bottom: 11px solid #fff; border-left: 14px solid transparent; }
+
+/* tail-chain-top: conector retangular fino e alto — liga visualmente ao balão acima
+   (mesmo personagem falando em sequência) */
+.panel-balloon--speech.tail-chain-top {
+  z-index: 0; /* abaixo dos balões normais (z-index:1) para o conector ficar atrás */
+}
+.panel-balloon--speech.tail-chain-top::after,
+.panel-balloon--speech.tail-chain-top::before {
+  bottom: auto;
+  border: none;
+}
+.panel-balloon--speech.tail-chain-top::after  { top: -52px; height: 52px; width: 12px; left: calc(50% - 6px); background: #111; z-index: -2; }
+.panel-balloon--speech.tail-chain-top::before { top: -49px; height: 49px; width: 8px;  left: calc(50% - 4px); background: #fff; z-index: -1; }
+
+/* tail-ur: rabicho aponta para cima-direita */
+.tail-ur::after  { right: 14px; border-bottom: 14px solid #111; border-left: 18px solid transparent; }
+.tail-ur::before { right: 16px; border-bottom: 11px solid #fff; border-left: 14px solid transparent; }
+
+
+/* ── Player Spotify embutido no quadro ───────────────────── */
+.spotify-widget {
+  position: absolute;
+  bottom: 0.75rem;
+  right: 0.75rem;
+  z-index: 10;
+  width: clamp(260px, 85%, 320px);
+  background: #1DB954;
+  border-radius: 12px;
+  padding: 3px;
+}
+
+.spotify-widget__inner {
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+/* Mobile: ocupa quase toda a largura e centraliza */
+@media (max-width: 639px) {
+  .spotify-widget {
+    left: 0.75rem;
+    right: 0.75rem;
+    width: auto;
+    bottom: 0.75rem;
+  }
+
+  /* Pág. 4 grade 2 mobile: proporções corretas */
+  [data-page="4"] .panels-grid:nth-of-type(2) .panel--opening .panel__art {
+    aspect-ratio: var(--ratio-opening); /* 3/1 — quadro largo */
+  }
+
+  [data-page="4"] .panels-grid:nth-of-type(2) .panel--sm:last-child .panel__art {
+    aspect-ratio: var(--ratio-sm); /* 4/3 — igual Q6 e Q7 */
+  }
+}
+
+/* Espaço entre as duas grades em cada página mesclada */
+.reader-page .panels-grid + .panels-grid {
+  margin-top: clamp(1rem, 3vh, 2rem);
+}
+
+/* Imagem dentro do quadro — cobre a área toda */
+.panel__art img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+}
+
+/* Q3 da grade 1 da pág. 2 (antiga pág. 3) — desloca para mostrar o personagem */
+[data-page="2"] .panels-grid:nth-of-type(1) .panel:nth-child(3) .panel__art img {
+  object-position: left center;
+}
+
+/* Label de placeholder — REMOVER ao inserir arte real */
+.panel__placeholder-label {
+  font-family: var(--font-display);
+  font-size: clamp(0.8rem, 3vw, 1.4rem);
+  letter-spacing: 0.3em;
+  color: rgba(255, 255, 255, 0.12);
+  user-select: none;
+  pointer-events: none;
+  text-transform: uppercase;
+  position: absolute;
+  white-space: nowrap;
+}
+
+
+/* ── ⑥ Navegação prev / next ─────────────────────────────── */
+.page-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: clamp(1rem, 3vh, 2rem) 0;
+  margin-top: var(--panel-gap);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.page-nav__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+
+  font-family: var(--font-body);
+  font-size: clamp(0.8rem, 2.2vw, 1rem);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+
+  padding: 0.7em 1.6em;
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius-btn);
+  color: var(--c-text);
+  transition: border-color var(--transition), color var(--transition), background var(--transition);
+}
+
+.page-nav__btn svg {
+  width: 1em;
+  height: 1em;
+  transition: transform var(--transition);
+}
+
+.page-nav__btn--prev:hover { border-color: var(--c-accent); color: var(--c-accent); }
+.page-nav__btn--prev:hover svg { transform: translateX(-4px); }
+
+.page-nav__btn--next {
+  background-color: var(--c-accent);
+  border-color: var(--c-accent);
+  color: var(--c-bg);
+  box-shadow: 0 0 20px var(--c-accent-glow);
+}
+
+.page-nav__btn--next:hover {
+  background-color: transparent;
+  color: var(--c-accent);
+}
+
+.page-nav__btn--next:hover svg { transform: translateX(4px); }
+
+/* Botão desativado (ex: "anterior" na primeira página) */
+.page-nav__btn.is-disabled {
+  opacity: 0.3;
+  pointer-events: none;
+  cursor: default;
+}
+
+
+/* ── ⑦ Footer do leitor ─────────────────────────────────── */
+.reader-footer {
+  text-align: center;
+  padding: 0.6rem 0 max(1rem, env(safe-area-inset-bottom, 1rem));
+}
+
+.reader-publisher {
+  font-family: var(--font-display);
+  font-size: clamp(0.65rem, 1.5vw, 0.8rem);
+  letter-spacing: 0.2em;
+  color: var(--c-muted);
+}
+
+
+/* ── Balões Q5 — ajuste mobile ───────────────────────────── */
+@media (max-width: 639px) {
+  .q5-esq { left: 5% !important; }
+  .q5-dir { left: auto !important; right: 5% !important; }
+}
+
+/* ── Landscape mobile (barra baixa) ─────────────────────── */
+@media (max-height: 500px) and (orientation: landscape) {
+  .reader-header { padding-top: 0.5rem; }
+  .page-nav      { padding: 0.75rem 0; }
+}
+
+
+/* ── Redução de movimento ────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .reader-back,
+  .reader-next-hint,
+  .page-nav__btn,
+  .page-nav__btn svg { transition: none; }
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   PÁGINA 9 — EXPEDIENTE
+   ══════════════════════════════════════════════════════════ */
+
+.expediente-page {
+  position: relative;
+  min-height: 100dvh;
+  /* display vem do sistema de views (.reader-page / .reader-page.is-active) */
+  align-items: center;
+  justify-content: center;
+  padding: clamp(2rem, 6vw, 4rem) var(--reader-pad);
+}
+
+/* Quando ativa, usa flex para centralizar o conteúdo */
+.reader-page.is-active.expediente-page {
+  display: flex;
+}
+
+/* Fundo da página expediente */
+.expediente__bg {
+  position: fixed;   /* fixo para cobrir o viewport durante o scroll */
+  inset: 0;
+  z-index: 0;
+  background-image: url('../assets/images/bkg-space03.png');
+  background-size: cover;
+  background-position: center;
+}
+
+.expediente__bg-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+/* Card central de conteúdo */
+.expediente__content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 520px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(1.2rem, 3vw, 2rem);
+  text-align: center;
+}
+
+/* Dedicatória */
+.expediente__memorial {
+  font-family: 'Dancing Script', 'Segoe Script', 'Brush Script MT', cursive;
+  font-size: clamp(1.1rem, 3.5vw, 1.6rem);
+  color: #c9a84c;
+  text-shadow: 0 0 18px rgba(201, 168, 76, 0.5);
+  letter-spacing: 0.03em;
+  font-style: italic;
+  margin-bottom: -0.5rem;
+}
+
+/* Título */
+.expediente__title {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 12vw, 6rem);
+  letter-spacing: 0.1em;
+  color: var(--c-text);
+  text-shadow: 0 0 60px var(--c-accent-glow);
+  border-bottom: 2px solid var(--c-accent);
+  padding-bottom: 0.2em;
+  line-height: 1;
+}
+
+/* Créditos */
+.expediente__credits {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  font-size: clamp(0.85rem, 2.2vw, 1rem);
+  color: var(--c-text);
+  line-height: 1.5;
+}
+
+.expediente__label {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(0.65rem, 1.6vw, 0.78rem);
+  letter-spacing: 0.22em;
+  color: var(--c-accent);
+  text-transform: uppercase;
+}
+
+/* Mensagem de contribuição */
+.expediente__msg {
+  font-size: clamp(0.8rem, 2vw, 0.95rem);
+  color: var(--c-muted);
+  line-height: 1.7;
+  max-width: 38ch;
+}
+
+.expediente__msg em {
+  font-style: normal;
+  color: var(--c-text);
+  font-weight: 600;
+}
+
+/* QR Code */
+.expediente__qr {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.expediente__qr svg {
+  width: clamp(100px, 28vw, 160px);
+  height: auto;
+  color: var(--c-text);
+  opacity: 0.85;
+}
+
+.expediente__qr-label {
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--c-muted);
+}
+
+/* Bloco do código copiável */
+.expediente__code-wrap {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.expediente__code {
+  display: block;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius-btn);
+  font-family: 'Courier New', Courier, monospace;
+  font-size: clamp(0.65rem, 1.8vw, 0.8rem);
+  color: var(--c-accent);
+  word-break: break-all;
+  text-align: center;
+  line-height: 1.5;
+}
+
+.expediente__copy-btn {
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+  font: inherit;
+  font-size: clamp(0.75rem, 2vw, 0.85rem);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--c-bg);
+  background: var(--c-accent);
+  border: 2px solid var(--c-accent);
+  border-radius: var(--radius-btn);
+  padding: 0.5em 1.8em;
+  transition: background var(--transition), color var(--transition);
+}
+
+.expediente__copy-btn:hover,
+.expediente__copy-btn:focus-visible {
+  background: transparent;
+  color: var(--c-accent);
+  outline: none;
+}
+
+/* Botão voltar para a capa */
+.expediente__back-btn {
+  -webkit-appearance: none;
+  appearance: none;
+  background: none;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--radius-btn);
+  cursor: pointer;
+  font: inherit;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.65em 1.6em;
+  font-size: clamp(0.8rem, 2vw, 0.95rem);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--c-muted);
+  transition: border-color var(--transition), color var(--transition);
+}
+
+.expediente__back-btn svg {
+  width: 1em;
+  height: 1em;
+}
+
+.expediente__back-btn:hover,
+.expediente__back-btn:focus-visible {
+  border-color: var(--c-accent);
+  color: var(--c-accent);
+  outline: none;
+}
+
+
+/* Assinatura da editora */
+.expediente__publisher {
+  font-family: var(--font-display);
+  font-size: clamp(0.7rem, 1.8vw, 0.9rem);
+  letter-spacing: 0.2em;
+  color: var(--c-muted);
+  margin-top: 0.5rem;
+}

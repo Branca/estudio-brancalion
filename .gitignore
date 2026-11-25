@@ -44,3 +44,7 @@ Desktop.ini
 
 # CNAME (gerado automaticamente pelo GitHub Pages se usar domínio)
 # CNAME
+.vercel
+
+# TypeScript incremental
+*.tsbuildinfo

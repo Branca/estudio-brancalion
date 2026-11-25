@@ -1,0 +1,426 @@
+/* ============================================================
+   TAMBABOOKS WEBCOMIC — HOME / CAPA
+   mobile-first · HTML5 + CSS puro · sem dependências JS
+   ============================================================ */
+
+
+/* ── Tokens de design ─────────────────────────────────────── */
+:root {
+  --c-bg:           #07060f;
+  --c-accent:       #c9a94e;        /* dourado */
+  --c-accent-glow:  rgba(201, 169, 78, 0.35);
+  --c-text:         #f0ede6;
+  --c-muted:        rgba(240, 237, 230, 0.45);
+  --c-publisher:    rgba(240, 237, 230, 0.65);
+
+  --font-display:   'Bebas Neue', 'Arial Narrow', Arial, sans-serif;
+  --font-body:      'Inter', system-ui, -apple-system, sans-serif;
+
+  --pad-page:       clamp(1.25rem, 5vw, 2.5rem);
+  --radius-btn:     0.35rem;
+  --transition:     0.22s ease;
+}
+
+
+/* ── Reset mínimo ─────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+a { color: inherit; text-decoration: none; }
+img, svg { display: block; }
+
+
+/* ── Base ─────────────────────────────────────────────────── */
+html, body {
+  height: 100%;
+  overflow: hidden; /* sempre travado; views scrollam internamente */
+  position: relative;
+}
+
+body {
+  background-color: var(--c-bg);
+  color: var(--c-text);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+
+/* ── Sistema de views (SPA) ──────────────────────────────── */
+.view {
+  display: none;
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+/* Home: flex column, sem scroll */
+#view-home.is-active {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+}
+
+/* Reader: scroll interno da própria section */
+#view-reader.is-active {
+  display: block;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background-image: url('../assets/images/bkg-space03.png');
+  background-size: cover;
+  background-position: center top;
+  background-attachment: fixed;
+}
+
+/* Só a página ativa aparece no leitor */
+.reader-page          { display: none; }
+.reader-page.is-active { display: block; }
+
+
+/* ── .cover — estilos visuais da capa ───────────────────── */
+.cover {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+
+/* ── ① Background ────────────────────────────────────────── */
+.cover__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+
+  background-image: url('../assets/images/bkg-space02.png');
+  background-size: cover;
+  background-position: center top;
+}
+
+/* Vinheta: escurece bordas como em foto de câmera */
+.cover__bg-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 35%, rgba(0,0,0,0.72) 100%);
+}
+
+
+/* ── ② Header — logo / título da história ────────────────── */
+.cover__header {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  padding: max(var(--pad-page), env(safe-area-inset-top, 1.25rem)) var(--pad-page) 0;
+  text-align: center;
+  /* Empurra o CTA para baixo */
+  flex-shrink: 0;
+}
+
+.story-title {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 0.88;
+  /* Sublinhado dourado */
+  padding-bottom: 0.18em;
+  border-bottom: 3px solid var(--c-accent);
+}
+
+.story-title__name {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 16vw, 10rem);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--c-text);
+  text-shadow:
+    0 0 80px var(--c-accent-glow),
+    0 3px 8px rgba(0, 0, 0, 0.9);
+}
+
+.story-tagline {
+  margin-top: 0.75rem;
+  font-size: clamp(0.7rem, 2.2vw, 0.9rem);
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--c-muted);
+}
+
+
+/* ── ③ CTA — botão principal ─────────────────────────────── */
+.cover__cta {
+  position: relative;
+  z-index: 10;
+  /* Cresce para empurrar o footer para baixo e centralizar o botão */
+  flex: 1;
+  display: flex;
+  align-items: flex-end;
+  padding-bottom: clamp(1.5rem, 5vh, 3rem);
+}
+
+.btn-read {
+  /* Reset de <button> — remove aparência nativa do browser */
+  -webkit-appearance: none;
+  appearance: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font: inherit;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55em;
+  padding: 0.85em 2.4em;
+
+  font-family: var(--font-body);
+  font-size: clamp(0.9rem, 2.8vw, 1.1rem);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+
+  color: var(--c-bg);
+  background-color: var(--c-accent);
+  border: 2px solid var(--c-accent);
+  border-radius: var(--radius-btn);
+
+  cursor: pointer;
+  transition:
+    background-color var(--transition),
+    color var(--transition),
+    box-shadow var(--transition);
+
+  box-shadow:
+    0 0 30px var(--c-accent-glow),
+    0 2px 12px rgba(0, 0, 0, 0.5);
+}
+
+.btn-read svg {
+  width: 1.05em;
+  height: 1.05em;
+  transition: transform var(--transition);
+}
+
+.btn-read:hover,
+.btn-read:focus-visible {
+  background-color: transparent;
+  color: var(--c-accent);
+  box-shadow: 0 0 50px var(--c-accent-glow), 0 0 0 1px var(--c-accent);
+  outline: none;
+}
+
+.btn-read:hover svg,
+.btn-read:focus-visible svg {
+  transform: translateX(5px);
+}
+
+.btn-read:active {
+  transform: scale(0.97);
+}
+
+
+/* ── ④ Footer ────────────────────────────────────────────── */
+.cover__footer {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  flex-shrink: 0;
+
+  /* Grid: [copyright] | [logo editora] */
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 0.5rem 1rem;
+
+  padding: 0.75rem var(--pad-page);
+  padding-bottom: max(0.75rem, env(safe-area-inset-bottom, 0.75rem));
+
+  /* Faixa semitransparente no rodapé */
+  background: linear-gradient(to top, rgba(0,0,0,0.55), transparent);
+}
+
+.cover__copyright {
+  grid-column: 1 / -1;          /* ocupa toda a largura no mobile */
+  text-align: center;
+  font-size: clamp(0.6rem, 1.6vw, 0.72rem);
+  letter-spacing: 0.06em;
+  color: var(--c-muted);
+}
+
+.publisher-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.45em;
+  grid-column: 2;
+  grid-row: 2;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity var(--transition);
+}
+
+.publisher-logo:hover { opacity: 1; }
+
+.publisher-logo__icon {
+  width:  clamp(1.1rem, 3vw, 1.4rem);
+  height: clamp(1.1rem, 3vw, 1.4rem);
+  color: var(--c-publisher);
+  flex-shrink: 0;
+}
+
+.publisher-logo__name {
+  font-family: var(--font-display);
+  font-size: clamp(0.75rem, 2vw, 0.95rem);
+  letter-spacing: 0.14em;
+  color: var(--c-publisher);
+}
+
+
+/* ── Mobile: desce logo/subtítulo 10% ──────────────────── */
+@media (max-width: 599px) {
+  .cover__header {
+    padding-top: calc(max(var(--pad-page), env(safe-area-inset-top, 1.25rem)) + 10vh);
+  }
+
+  .q5-dir {
+    top: 34% !important;
+  }
+
+  .q5-resp {
+    bottom: -5.5% !important;
+  }
+
+  .q-viagem-major {
+    left: 5% !important;
+    top: 30% !important;
+  }
+
+  /* Rabicho superior-direito no mobile */
+  .q-viagem-major::after {
+    bottom: auto !important;
+    top: -14px !important;
+    left: auto !important;
+    right: 14px !important;
+    transform: none !important;
+    border: none !important;
+    border-bottom: 14px solid #111 !important;
+    border-left: 18px solid transparent !important;
+  }
+
+  .q-viagem-major::before {
+    bottom: auto !important;
+    top: -10px !important;
+    left: auto !important;
+    right: 16px !important;
+    transform: none !important;
+    border: none !important;
+    border-bottom: 11px solid #fff !important;
+    border-left: 14px solid transparent !important;
+  }
+}
+
+
+/* ── Tablet ≥ 600px ─────────────────────────────────────── */
+@media (min-width: 600px) {
+  .cover__footer {
+    grid-template-columns: 1fr auto 1fr;
+    grid-template-rows: 1fr;
+  }
+
+  .cover__copyright {
+    grid-column: 2;
+    grid-row: 1;
+    white-space: nowrap;
+  }
+
+  .publisher-logo {
+    grid-column: 3;
+    grid-row: 1;
+    justify-self: end;
+  }
+}
+
+
+/* ── Barra de controles (fixo, canto superior direito) ──────
+   Compartilhado entre home e leitor.
+   Adicione qualquer .ui-btn dentro para compor a barra.
+──────────────────────────────────────────────────────────── */
+.ui-controls {
+  position: fixed;
+  z-index: 20;
+  top: max(1rem, env(safe-area-inset-top, 1rem));
+  right: max(1rem, env(safe-area-inset-right, 1rem));
+  display: flex;
+  gap: 0.45rem;
+  align-items: center;
+}
+
+/* Botão genérico da barra */
+.ui-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  background: rgba(7, 6, 15, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 50%;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  cursor: pointer;
+  color: var(--c-muted);
+  transition: color var(--transition), border-color var(--transition);
+}
+
+.ui-btn svg {
+  width: 1rem;
+  height: 1rem;
+  position: absolute;
+  transition: opacity var(--transition);
+}
+
+.ui-btn:hover,
+.ui-btn:focus-visible {
+  color: var(--c-accent);
+  border-color: var(--c-accent);
+  outline: none;
+}
+
+.ui-btn.is-active {
+  color: var(--c-accent);
+  border-color: rgba(201, 169, 78, 0.5);
+}
+
+/* ── Botão de som ────────────────────────────────────────── */
+.sound-toggle--on {
+  color: var(--c-accent);
+  border-color: rgba(201, 169, 78, 0.5);
+}
+
+/* Ícones do som: alternância por estado */
+.sound-toggle .sound-toggle__icon--muted { opacity: 1; }
+.sound-toggle .sound-toggle__icon--on    { opacity: 0; }
+.sound-toggle--on .sound-toggle__icon--muted { opacity: 0; }
+.sound-toggle--on .sound-toggle__icon--on    { opacity: 1; }
+
+/* ── Botão de fullscreen ─────────────────────────────────── */
+/* Ícones: alterna entre expandir e comprimir */
+.fullscreen-btn .icon-compress { opacity: 0; }
+.fullscreen-btn.is-active .icon-expand   { opacity: 0; }
+.fullscreen-btn.is-active .icon-compress { opacity: 1; }
+
+
+/* ── Landscape mobile (altura reduzida) ─────────────────── */
+@media (max-height: 520px) and (orientation: landscape) {
+  .story-title__name {
+    font-size: clamp(2rem, 12vh, 4.5rem);
+  }
+
+  .story-tagline { display: none; }
+
+  .cover__cta { padding-bottom: 0.75rem; }
+}
+
+
+/* ── Redução de movimento (acessibilidade) ───────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .btn-read,
+  .btn-read svg,
+  .publisher-logo { transition: none; }
+}

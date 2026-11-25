@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Centauri — Webcomic publicada pela Tambabooks.">
+  <title>Centauri — Tambabooks</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Dancing+Script:wght@600&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/reader.css">
+  <script src="https://open.spotify.com/embed-podcast/iframe-api/v1" async></script>
+</head>
+<body>
+
+  <!-- ÁUDIO (persiste em toda a navegação interna) -->
+  <audio id="bg-music"
+         src="assets/music/monume-jazz-restaurant-music-577976.mp3"
+         loop autoplay preload="auto" aria-hidden="true"></audio>
+
+  <!-- UI CONTROLS — fixo, sempre visível em ambas as views -->
+  <div class="ui-controls">
+
+    <button class="ui-btn sound-toggle" id="sound-toggle"
+            aria-label="Ativar som" aria-pressed="false" title="Ativar / desativar música">
+      <svg class="sound-toggle__icon sound-toggle__icon--muted" aria-hidden="true"
+           viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+        <line x1="23" y1="9" x2="17" y2="15"/>
+        <line x1="17" y1="9" x2="23" y2="15"/>
+      </svg>
+      <svg class="sound-toggle__icon sound-toggle__icon--on" aria-hidden="true"
+           viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+        <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+      </svg>
+    </button>
+
+    <button class="ui-btn fullscreen-btn" id="fullscreen-btn"
+            aria-label="Entrar em tela cheia" aria-pressed="false" title="Tela cheia">
+      <svg class="icon-expand" aria-hidden="true" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M8 3H5a2 2 0 0 0-2 2v3"/>
+        <path d="M21 8V5a2 2 0 0 0-2-2h-3"/>
+        <path d="M3 16v3a2 2 0 0 0 2 2h3"/>
+        <path d="M16 21h3a2 2 0 0 0 2-2v-3"/>
+      </svg>
+      <svg class="icon-compress" aria-hidden="true" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M8 3v3a2 2 0 0 1-2 2H3"/>
+        <path d="M21 8h-3a2 2 0 0 1-2-2V3"/>
+        <path d="M3 16h3a2 2 0 0 1 2 2v3"/>
+        <path d="M16 21v-3a2 2 0 0 1 2-2h3"/>
+      </svg>
+    </button>
+
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════════════
+       VIEW 1 — HOME (Capa da revista)
+       Trocar o gradiente em .cover__bg pelo caminho da arte:
+         background-image: url('assets/cover-art.jpg');
+  ═══════════════════════════════════════════════════════════ -->
+  <section id="view-home" class="view cover is-active" aria-label="Capa">
+
+    <div class="cover__bg" aria-hidden="true">
+      <div class="cover__bg-vignette"></div>
+    </div>
+
+    <header class="cover__header">
+      <div class="story-title" aria-label="Centauri">
+        <span class="story-title__name">CENTAURI</span>
+      </div>
+      <p class="story-tagline">Uma Webcomic interestelar</p>
+    </header>
+
+    <div class="cover__cta">
+      <button class="btn-read" id="btn-read" aria-label="Começar a ler a história">
+        <span>Ler a História</span>
+        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 12h14M12 5l7 7-7 7"/>
+        </svg>
+      </button>
+    </div>
+
+    <footer class="cover__footer">
+      <p class="cover__copyright">Direitos Reservados. Tambabooks 2026</p>
+      <div class="publisher-logo" aria-label="Tambabooks">
+        <svg class="publisher-logo__icon" viewBox="0 0 32 32" fill="currentColor" aria-hidden="true">
+          <rect x="4" y="4" width="24" height="24" rx="3" fill="none" stroke="currentColor" stroke-width="2"/>
+          <rect x="10" y="10" width="12" height="2"/>
+          <rect x="15" y="10" width="2" height="12"/>
+        </svg>
+        <span class="publisher-logo__name">TAMBABOOKS</span>
+      </div>
+    </footer>
+
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════════════
+       VIEW 2 — READER (Leitor de quadrinhos)
+       Para adicionar páginas: copie um bloco .reader-page,
+       incremente data-page e atualize TOTAL_PAGES no script.
+  ═══════════════════════════════════════════════════════════ -->
+  <section id="view-reader" class="view" aria-label="Leitor">
+    <div class="reader">
+
+      <!-- Header do leitor (persiste entre páginas) -->
+      <header class="reader-header">
+        <button class="reader-back" id="btn-back" aria-label="Voltar para a capa">
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 12H5M12 5l-7 7 7 7"/>
+          </svg>
+          Capa
+        </button>
+
+        <span class="reader-indicator" id="reader-indicator" aria-live="polite">
+          Centauri &nbsp;·&nbsp; Cap. 1 &nbsp;·&nbsp; Pág. 1
+        </span>
+
+        <button class="reader-next-hint" id="btn-next-hint" aria-label="Próxima página">
+          Próxima
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </button>
+      </header>
+
+      <!-- Container de páginas — só a .is-active é visível -->
+      <div class="reader-pages">
+
+
+        <!-- ─────────────────────────────────────────────────
+             PÁGINA 1 (antigas págs. 1 + 2)
+        ───────────────────────────────────────────────────── -->
+        <article class="reader-page is-active" data-page="1" aria-label="Página 1">
+
+          <!-- Grade 1 — antiga pág. 1 -->
+          <div class="panels-grid">
+            <div class="panel panel--opening" aria-label="Quadro 1 — Abertura">
+              <div class="panel__art">
+                <span class="panel__placeholder-label" aria-hidden="true">Q1 · ABERTURA</span>
+                <div class="panel-balloon panel-balloon--top-left" role="text">
+                  <p>Sistema solar, Terra, 1983.</p>
+                </div>
+                <div class="panel-balloon" role="text">
+                  <p>Em algum lugar de Tóquio.</p>
+                </div>
+              </div>
+            </div>
+            <div class="panel panel--sm" aria-label="Quadro 2">
+              <div class="panel__art">
+                <span class="panel__placeholder-label" aria-hidden="true">Q2</span>
+              </div>
+            </div>
+            <div class="panel panel--sm" aria-label="Quadro 3">
+              <div class="panel__art">
+                <span class="panel__placeholder-label" aria-hidden="true">Q3</span>
+              </div>
+            </div>
+            <div class="panel panel--sm" aria-label="Quadro 4">
+              <div class="panel__art">
+                <span class="panel__placeholder-label" aria-hidden="true">Q4</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Grade 2 — antiga pág. 2 -->
+          <div class="panels-grid panels-grid--inverted">
+            <div class="panel panel--opening" aria-label="Quadro 5 — Abertura">
+              <div class="panel__art">
+                <span class="panel__placeholder-label" aria-hidden="true">Q5 · ABERTURA</span>
+                <div class="panel-balloon panel-balloon--top-left" role="text"><p>Algumas horas depois.</p></div>
+                <div class="panel-balloon panel-balloon--speech q5-esq" style="left: 32%; top: 36%;" role="text"><p>Eu vi entrar, mas não vi sair, simplesmente sumiu!</p></div>
+                <div class="panel-balloon panel-balloon--speech q5-dir" style="left: 58%; top: 52%;" role="text"><p>Sentiu falta de algo na loja?</p></div>
+                <div class="panel-balloon q5-resp" role="text"><p>Não. Nada!</p></div>
+              </div>
+            </div>
+            <div class="panel panel--sm" aria-label="Quadro 6">
+              <div class="panel__art">
+                <span class="panel__placeholder-label" aria-hidden="true">Q6</span>
+                <div class="spotify-widget">
+                  <div id="spotify-player" class="spotify-widget__inner"></div>
+                </div>
+              </div>
+            </div>
+            <div class="panel panel--sm" aria-label="Quadro 7">
+              <div class="panel__art" id="q7-animated">
+                <img src="assets/images/quadro7-1.jpg" alt="" class="q7-frame">
+                <img src="assets/images/quadro7-2.jpg" alt="" class="q7-frame" style="opacity:0">
+                <img src="assets/images/quadro7-3.jpg" alt="" class="q7-frame" style="opacity:0">
+                <img src="assets/images/quadro07-4.jpg" alt="" class="q7-frame" style="opacity:0">
+              </div>
+            </div>
+            <div class="panel panel--sm" aria-label="Quadro 8">
+              <div class="panel__art">
+                <span class="panel__placeholder-label" aria-hidden="true">Q8</span>
+              </div>
+            </div>
+          </div>
+
+        </article>
+
+
+        <!-- ─────────────────────────────────────────────────
+             PÁGINA 2 (antigas págs. 3 + 4)
+        ───────────────────────────────────────────────────── -->
+        <article class="reader-page" data-page="2" aria-label="Página 2">
+
+          <!-- Grade 1 — antiga pág. 3 (inverted) -->
+          <div class="panels-grid panels-grid--inverted">
+            <div class="panel panel--opening" aria-label="Quadro 1 — Abertura">
+              <div class="panel__art">
+                <img src="assets/images/quadro12.jpg" alt="Quadro 1 — Página 2">
+                <div class="panel-balloon panel-balloon--speech tail-bl" style="left: 30%; top: 28%;" role="text"><p>Ih! Oh lá! tá mudando o tempo Major! e pelo visto é em 108 BPM.</p></div>
+              </div>
+            </div>
+            <div class="panel panel--sm" aria-label="Quadro 2">
+              <div class="panel__art">
+                <img src="assets/images/quadro09.jpg" alt="Quadro 2 — Página 2">
+              </div>
+            </div>
+            <div class="panel panel--sm" aria-label="Quadro 3">
+              <div class="panel__art">
+                <img src="assets/images/quadro10.jpg" alt="Quadro 3 — Página 2">
+              </div>
+            </div>
+            <div class="panel panel--sm" aria-label="Quadro 4">
+              <div class="panel__art">
+                <img src="assets/images/quadro11.jpg" alt="Quadro 4 — Página 2">
+                <div class="panel-balloon panel-balloon--speech tail-br pos-tl" style="width: clamp(150px, 65%, 290px); padding: 0.28rem 0.75rem; line-height: 1.3;" role="text"><p>E aí Cabron!! Chegou chegando!<br>Ha Ha!</p></div>
+                <div class="panel-balloon panel-balloon--speech tail-ur pos-bl" role="text"><p>Ai! caramba...</p></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Grade 2 — antiga pág. 4 -->
+          <div class="panels-grid panels-grid--inverted">
+            <div class="panel panel--opening" aria-label="Quadro 5 — Abertura">
+              <div class="panel__art">
+                <img src="assets/images/quadro16.jpg" alt="Quadro 5 — Página 2">
+                <div class="panel-balloon panel-balloon--speech tail-right q-viagem-major" style="left: 20%; top: 20%;" role="text"><p>Você não vai querer perder essa viagem né major?!</p></div>
+                <div class="panel-balloon panel-balloon--speech tail-ul" style="left: 57%; bottom: 30%;" role="text"><p>De jeito nenhum!</p></div>
+              </div>
+            </div>
+            <div class="panel panel--sm" aria-label="Quadro 6">
+              <div class="panel__art">
+                <img src="assets/images/quadro13.jpg" alt="Quadro 6 — Página 2">
+              </div>
+            </div>
+            <div class="panel panel--sm" aria-label="Quadro 7">
+              <div class="panel__art">
+                <img src="assets/images/quadro14.png" alt="Quadro 7 — Página 2">
+                <div class="panel-balloon panel-balloon--speech tail-bc pos-tl" role="text"><p>Não é linda uma chuva em Si Bemol!!!</p></div>
+              </div>
+            </div>
+            <div class="panel panel--sm" aria-label="Quadro 8">
+              <div class="panel__art">
+                <img src="assets/images/quadro15.jpg" alt="Quadro 8 — Página 2">
+                <div class="panel-balloon panel-balloon--speech tail-right" style="position: absolute; top: 8%; left: 13%;" role="text"><p>Vamos! Anda logo!</p></div>
+              </div>
+            </div>
+          </div>
+
+        </article>
+
+
+        <!-- ─────────────────────────────────────────────────
+             PÁGINA 3 (antigas págs. 5 + 6)
+        ───────────────────────────────────────────────────── -->
+        <article class="reader-page" data-page="3" aria-label="Página 3">
+
+          <!-- Grade 1 — antiga pág. 5 (inverted) -->
+          <div class="panels-grid panels-grid--inverted">
+            <div class="panel panel--opening" aria-label="Quadro 1 — Abertura">
+              <div class="panel__art">
+                <img src="assets/images/quadro20.jpg" alt="Quadro 1 — Página 3">
+              </div>
+            </div>
+            <div class="panel panel--sm" aria-label="Quadro 2">
+              <div class="panel__art">
+                <img src="assets/images/quadro17.jpg" alt="Quadro 2 — Página 3">
+              </div>
+            </div>
+            <div class="panel panel--sm" aria-label="Quadro 3">
+              <div class="panel__art">
+                <img src="assets/images/quadro18.jpg" alt="Quadro 3 — Página 3">
+              </div>
+            </div>
+            <div class="panel panel--sm" aria-label="Quadro 4">
+              <div class="panel__art">
+                <img src="assets/images/quadro19.jpg" alt="Quadro 4 — Página 3">
+              </div>
+            </div>
+          </div>
+
+          <!-- Grade 2 — antiga pág. 6 (inverted) -->
+          <div class="panels-grid panels-grid--inverted">
+            <div class="panel panel--opening" aria-label="Quadro 5 — Abertura">
+              <div class="panel__art">
+                <img src="assets/images/quadro24.jpg" alt="Quadro 5 — Página 3">
+              </div>
+            </div>
+            <div class="panel panel--sm" aria-label="Quadro 6">
+              <div class="panel__art">
+                <img src="assets/images/quadro21.jpg" alt="Quadro 6 — Página 3">
+              </div>
+            </div>
+            <div class="panel panel--sm" aria-label="Quadro 7">
+              <div class="panel__art">
+                <img src="assets/images/quadro22.jpg" alt="Quadro 7 — Página 3">
+              </div>
+            </div>
+            <div class="panel panel--sm" aria-label="Quadro 8">
+              <div class="panel__art">
+                <img src="assets/images/quadro23.jpg" alt="Quadro 8 — Página 3">
+              </div>
+            </div>
+          </div>
+
+        </article>
+
+
+        <!-- ─────────────────────────────────────────────────
+             PÁGINA 4 (antigas págs. 7 + 8)
+        ───────────────────────────────────────────────────── -->
+        <article class="reader-page" data-page="4" aria-label="Página 4">
+
+          <!-- Grade 1 — antiga pág. 7 -->
+          <div class="panels-grid">
+            <div class="panel panel--opening" aria-label="Quadro 1 — Abertura">
+              <div class="panel__art">
+                <img src="assets/images/quadro25.jpg" alt="Quadro 1 — Página 4">
+                <div class="panel-balloon panel-balloon--speech tail-br pos-tl" style="left: 45%; top: 7%;" role="text"><p>Foi uma longa viagem até aqui! Não mesmo?</p></div>
+              </div>
+            </div>
+            <div class="panel panel--sm" aria-label="Quadro 2">
+              <div class="panel__art">
+                <img src="assets/images/quadro26.jpg" alt="Quadro 2 — Página 4">
+                <div class="panel-balloon panel-balloon--speech tail-bl pos-mr" style="top: 21%;" role="text"><p>Mas agora me digam: Até onde uma música pode nos levar?</p></div>
+              </div>
+            </div>
+            <div class="panel panel--sm" aria-label="Quadro 3">
+              <div class="panel__art">
+                <img src="assets/images/quadro27.jpg" alt="Quadro 3 — Página 4">
+                <div class="panel-balloon panel-balloon--speech tail-br pos-tl" role="text"><p>Bom! Essa nos trouxe até aqui...</p></div>
+              </div>
+            </div>
+            <div class="panel panel--sm" aria-label="Quadro 4">
+              <div class="panel__art">
+                <img src="assets/images/quadro28.jpg" alt="Quadro 4 — Página 4">
+                <div class="panel-balloon panel-balloon--speech tail-br pos-tr" role="text"><p>Agora é com vocês!</p></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Grade 2 — antiga pág. 8 (inverted, com Spotify) -->
+          <div class="panels-grid panels-grid--inverted">
+            <div class="panel panel--opening" aria-label="Quadro 5 — Abertura">
+              <div class="panel__art">
+                <img src="assets/images/quadro32.jpg" alt="Quadro 5 — Página 4">
+                <div class="panel-balloon panel-balloon--top-left" role="text"><p>E essa major? Até onde vai nos levar?</p></div>
+                <div class="panel-balloon panel-balloon--speech tail-ul" style="bottom: 5%; right: 5%;" role="text"><p>Continua...</p></div>
+              </div>
+            </div>
+            <div class="panel panel--sm" aria-label="Quadro 6">
+              <div class="panel__art">
+                <img src="assets/images/quadro29.jpg" alt="Quadro 6 — Página 4">
+              </div>
+            </div>
+            <div class="panel panel--sm" aria-label="Quadro 7">
+              <div class="panel__art">
+                <img src="assets/images/quadro30.jpg" alt="Quadro 7 — Página 4">
+              </div>
+            </div>
+            <div class="panel panel--sm" aria-label="Quadro 8">
+              <div class="panel__art">
+                <img src="assets/images/quadro31.jpg" alt="Quadro 8 — Página 4">
+                <div class="panel-balloon panel-balloon--speech tail-bl pos-tr" role="text"><p>Here, There and Everywhere...</p></div>
+              </div>
+            </div>
+          </div>
+
+        </article>
+
+
+        <!-- ─────────────────────────────────────────────────
+             PÁGINA 5 — Cap. 2, pág. 1 (placeholder)
+        ───────────────────────────────────────────────────── -->
+        <article class="reader-page" data-page="5" aria-label="Página 5">
+
+          <div class="panels-grid panels-grid--inverted">
+            <div class="panel panel--opening" aria-label="Quadro 1 — Abertura">
+              <div class="panel__art" style="background-color:#1a1a2e;"></div>
+            </div>
+            <div class="panel panel--sm" aria-label="Quadro 2">
+              <div class="panel__art" style="background-color:#16213e;"></div>
+            </div>
+            <div class="panel panel--sm" aria-label="Quadro 3">
+              <div class="panel__art" style="background-color:#0f3460;"></div>
+            </div>
+            <div class="panel panel--sm" aria-label="Quadro 4">
+              <div class="panel__art" style="background-color:#533483;"></div>
+            </div>
+          </div>
+
+          <div class="panels-grid panels-grid--inverted">
+            <div class="panel panel--opening" aria-label="Quadro 5 — Abertura">
+              <div class="panel__art" style="background-color:#2c003e;"></div>
+            </div>
+            <div class="panel panel--sm" aria-label="Quadro 6">
+              <div class="panel__art" style="background-color:#420420;"></div>
+            </div>
+            <div class="panel panel--sm" aria-label="Quadro 7">
+              <div class="panel__art" style="background-color:#800020;"></div>
+            </div>
+            <div class="panel panel--sm" aria-label="Quadro 8">
+              <div class="panel__art" style="background-color:#c94b4b;"></div>
+            </div>
+          </div>
+
+        </article>
+
+
+        <!-- ─────────────────────────────────────────────────
+             PÁGINA 6 — Cap. 2, pág. 2 (placeholder)
+        ───────────────────────────────────────────────────── -->
+        <article class="reader-page" data-page="6" aria-label="Página 6">
+
+          <div class="panels-grid">
+            <div class="panel panel--opening" aria-label="Quadro 1 — Abertura">
+              <div class="panel__art" style="background-color:#1b4332;"></div>
+            </div>
+            <div class="panel panel--sm" aria-label="Quadro 2">
+              <div class="panel__art" style="background-color:#2d6a4f;"></div>
+            </div>
+            <div class="panel panel--sm" aria-label="Quadro 3">
+              <div class="panel__art" style="background-color:#40916c;"></div>
+            </div>
+            <div class="panel panel--sm" aria-label="Quadro 4">
+              <div class="panel__art" style="background-color:#74c69d;"></div>
+            </div>
+          </div>
+
+          <div class="panels-grid panels-grid--inverted">
+            <div class="panel panel--opening" aria-label="Quadro 5 — Abertura">
+              <div class="panel__art" style="background-color:#023047;"></div>
+            </div>
+            <div class="panel panel--sm" aria-label="Quadro 6">
+              <div class="panel__art" style="background-color:#126782;"></div>
+            </div>
+            <div class="panel panel--sm" aria-label="Quadro 7">
+              <div class="panel__art" style="background-color:#219ebc;"></div>
+            </div>
+            <div class="panel panel--sm" aria-label="Quadro 8">
+              <div class="panel__art" style="background-color:#8ecae6;"></div>
+            </div>
+          </div>
+
+        </article>
+
+
+        <!-- ─────────────────────────────────────────────────
+             PÁGINA 7 — Cap. 2, pág. 3 (placeholder)
+        ───────────────────────────────────────────────────── -->
+        <article class="reader-page" data-page="7" aria-label="Página 7">
+
+          <div class="panels-grid panels-grid--inverted">
+            <div class="panel panel--opening" aria-label="Quadro 1 — Abertura">
+              <div class="panel__art" style="background-color:#370617;"></div>
+            </div>
+            <div class="panel panel--sm" aria-label="Quadro 2">
+              <div class="panel__art" style="background-color:#6a040f;"></div>
+            </div>
+            <div class="panel panel--sm" aria-label="Quadro 3">
+              <div class="panel__art" style="background-color:#d00000;"></div>
+            </div>
+            <div class="panel panel--sm" aria-label="Quadro 4">
+              <div class="panel__art" style="background-color:#e85d04;"></div>
+            </div>
+          </div>
+
+          <div class="panels-grid">
+            <div class="panel panel--opening" aria-label="Quadro 5 — Abertura">
+              <div class="panel__art" style="background-color:#f48c06;"></div>
+            </div>
+            <div class="panel panel--sm" aria-label="Quadro 6">
+              <div class="panel__art" style="background-color:#faa307;"></div>
+            </div>
+            <div class="panel panel--sm" aria-label="Quadro 7">
+              <div class="panel__art" style="background-color:#ffba08;"></div>
+            </div>
+            <div class="panel panel--sm" aria-label="Quadro 8">
+              <div class="panel__art" style="background-color:#ffe169;"></div>
+            </div>
+          </div>
+
+        </article>
+
+
+        <!-- ─────────────────────────────────────────────────
+             PÁGINA 8 — Cap. 2, pág. 4 (placeholder)
+        ───────────────────────────────────────────────────── -->
+        <article class="reader-page" data-page="8" aria-label="Página 8">
+
+          <div class="panels-grid">
+            <div class="panel panel--opening" aria-label="Quadro 1 — Abertura">
+              <div class="panel__art" style="background-color:#240046;"></div>
+            </div>
+            <div class="panel panel--sm" aria-label="Quadro 2">
+              <div class="panel__art" style="background-color:#3c096c;"></div>
+            </div>
+            <div class="panel panel--sm" aria-label="Quadro 3">
+              <div class="panel__art" style="background-color:#5a189a;"></div>
+            </div>
+            <div class="panel panel--sm" aria-label="Quadro 4">
+              <div class="panel__art" style="background-color:#7b2d8b;"></div>
+            </div>
+          </div>
+
+          <div class="panels-grid panels-grid--inverted">
+            <div class="panel panel--opening" aria-label="Quadro 5 — Abertura">
+              <div class="panel__art" style="background-color:#9d4edd;"></div>
+            </div>
+            <div class="panel panel--sm" aria-label="Quadro 6">
+              <div class="panel__art" style="background-color:#c77dff;"></div>
+            </div>
+            <div class="panel panel--sm" aria-label="Quadro 7">
+              <div class="panel__art" style="background-color:#e0aaff;"></div>
+            </div>
+            <div class="panel panel--sm" aria-label="Quadro 8">
+              <div class="panel__art" style="background-color:#f3d5ff;"></div>
+            </div>
+          </div>
+
+        </article>
+
+
+        <!-- ─────────────────────────────────────────────────
+             PÁGINA 9 — EXPEDIENTE
+             Trocar .expediente__bg pelo caminho da arte final:
+               background-image: url('assets/pages/p09-bg.jpg');
+        ───────────────────────────────────────────────────── -->
+        <article class="reader-page expediente-page" data-page="9" aria-label="Expediente">
+
+          <!-- Arte de fundo (placeholder — trocar por imagem real) -->
+          <div class="expediente__bg" aria-hidden="true">
+            <div class="expediente__bg-overlay"></div>
+          </div>
+
+          <div class="expediente__content">
+
+            <p class="expediente__memorial">Em memória de João Fidalgo</p>
+
+            <h1 class="expediente__title">CENTAURI</h1>
+
+            <div class="expediente__credits">
+              <p><span class="expediente__label">Textos e Desenhos</span><br>Mauricio Brancalion</p>
+              <p><span class="expediente__label">Editora</span><br>Tambabooks</p>
+            </div>
+
+            <p class="expediente__msg">
+              <em>Centauri</em> é uma webcomic independente.<br>
+              Se você chegou até aqui, obrigado de coração.<br>
+              Copie o código abaixo ou fotografe o QR-code<br>
+              e faça sua contribuição para ajudar o projeto.
+            </p>
+
+            <!-- QR Code placeholder -->
+            <div class="expediente__qr" aria-label="QR Code PIX para contribuição">
+              <img src="qr-code-webcomic.png" alt="QR Code PIX — Contribuição Centauri"
+                   style="width: clamp(140px, 36vw, 200px); height: auto; border-radius: 8px;">
+            </div>
+
+            <!-- Código de contribuição (copiável) -->
+            <div class="expediente__code-wrap">
+              <code class="expediente__code" id="pix-code">00020126580014BR.GOV.BCB.PIX01361dd39be8-e354-430e-8a9e-c8094d2791805204000053039865802BR5925Mauricio Rallo Brancalion6009SAO PAULO62140510qBn5L21cRB6304B157</code>
+              <button class="expediente__copy-btn" id="btn-copy" aria-label="Copiar código">
+                Copiar
+              </button>
+            </div>
+
+            <p class="expediente__publisher">Tambabooks &nbsp;·&nbsp; 2026</p>
+
+            <button class="expediente__back-btn" id="btn-back-exp" aria-label="Voltar para a capa">
+              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                   stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 12H5M12 5l-7 7 7 7"/>
+              </svg>
+              Voltar para a Capa
+            </button>
+
+          </div>
+        </article>
+
+
+      </div><!-- /reader-pages -->
+
+      <!-- Navegação prev / next -->
+      <nav class="page-nav" aria-label="Navegação de páginas">
+        <button class="page-nav__btn page-nav__btn--prev is-disabled"
+                id="btn-prev" aria-disabled="true" aria-label="Página anterior">
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 12H5M12 5l-7 7 7 7"/>
+          </svg>
+          Anterior
+        </button>
+
+        <button class="page-nav__btn page-nav__btn--next"
+                id="btn-next" aria-label="Próxima página">
+          Próxima
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </button>
+      </nav>
+
+      <footer class="cover__footer">
+        <p class="cover__copyright">Direitos Reservados. Tambabooks 2026</p>
+        <div class="publisher-logo" aria-label="Tambabooks">
+          <svg class="publisher-logo__icon" viewBox="0 0 32 32" fill="currentColor" aria-hidden="true">
+            <rect x="4" y="4" width="24" height="24" rx="3" fill="none" stroke="currentColor" stroke-width="2"/>
+            <rect x="10" y="10" width="12" height="2"/>
+            <rect x="15" y="10" width="2" height="12"/>
+          </svg>
+          <span class="publisher-logo__name">TAMBABOOKS</span>
+        </div>
+      </footer>
+
+    </div><!-- /reader -->
+  </section>
+
+
+  <script>
+  (function () {
+
+    // ── Configuração ───────────────────────────────────────
+    const TOTAL_PAGES = 9; // 4 págs. Cap.1 + 4 págs. Cap.2 + expediente
+
+    // ── Elementos ──────────────────────────────────────────
+    const viewHome    = document.getElementById('view-home');
+    const viewReader  = document.getElementById('view-reader');
+    const indicator   = document.getElementById('reader-indicator');
+    const btnRead     = document.getElementById('btn-read');
+    const btnBack     = document.getElementById('btn-back');
+    const btnPrev     = document.getElementById('btn-prev');
+    const btnNext     = document.getElementById('btn-next');
+    const btnNextHint = document.getElementById('btn-next-hint');
+    const pages       = document.querySelectorAll('.reader-page');
+
+    let currentPage = 1;
+
+    // ── Troca de view ──────────────────────────────────────
+    function showHome() {
+      viewHome.classList.add('is-active');
+      viewReader.classList.remove('is-active');
+    }
+
+    function showReader() {
+      viewHome.classList.remove('is-active');
+      viewReader.classList.add('is-active');
+      audio.pause();
+      audio.muted = true;
+      soundOn = false;
+      window._soundOn = false;
+      soundBtn.setAttribute('aria-label', 'Ativar som');
+      soundBtn.setAttribute('aria-pressed', 'false');
+      soundBtn.classList.remove('sound-toggle--on');
+    }
+
+    // ── Navegação de páginas ───────────────────────────────
+    function goToPage(n) {
+      n = Math.max(1, Math.min(TOTAL_PAGES, n));
+
+      pages.forEach(p => p.classList.remove('is-active'));
+      document.querySelector(`.reader-page[data-page="${n}"]`).classList.add('is-active');
+      currentPage = n;
+
+      let chapLabel, chapPage;
+      if (n <= 4)      { chapLabel = '1'; chapPage = n; }
+      else if (n <= 8) { chapLabel = '2'; chapPage = n - 4; }
+      else             { chapLabel = null; chapPage = null; }
+
+      indicator.innerHTML = chapLabel
+        ? `Centauri &nbsp;&middot;&nbsp; Cap. ${chapLabel} &nbsp;&middot;&nbsp; Pág. ${chapPage}`
+        : `Centauri &nbsp;&middot;&nbsp; Expediente`;
+
+      const atFirst = n === 1;
+      const atLast  = n === TOTAL_PAGES;
+      btnPrev.classList.toggle('is-disabled', atFirst);
+      btnPrev.setAttribute('aria-disabled', String(atFirst));
+      btnNext.classList.toggle('is-disabled', atLast);
+      btnNext.setAttribute('aria-disabled', String(atLast));
+      btnNextHint.classList.toggle('is-disabled', atLast);
+
+      viewReader.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // ── Listeners de navegação ─────────────────────────────
+    btnRead.addEventListener('click', () => { showReader(); goToPage(1); });
+    btnBack.addEventListener('click', showHome);
+    document.getElementById('btn-back-exp').addEventListener('click', showHome);
+    btnPrev.addEventListener('click', () => { if (currentPage > 1) goToPage(currentPage - 1); });
+    btnNext.addEventListener('click', () => { if (currentPage < TOTAL_PAGES) goToPage(currentPage + 1); });
+    btnNextHint.addEventListener('click', () => { if (currentPage < TOTAL_PAGES) goToPage(currentPage + 1); });
+
+    // ── Som ────────────────────────────────────────────────
+    const audio    = document.getElementById('bg-music');
+    const soundBtn = document.getElementById('sound-toggle');
+    let soundOn    = false;
+    window._soundOn = false; // exposto para o callback do Spotify
+
+    // Se o autoplay funcionou (sem mudo), atualiza a UI imediatamente.
+    // Fallback: primeiro clique na capa liga o som (browsers que bloqueiam autoplay).
+    function enableSound() {
+      soundOn = true;
+      window._soundOn = true;
+      soundBtn.setAttribute('aria-label', 'Desativar som');
+      soundBtn.setAttribute('aria-pressed', 'true');
+      soundBtn.classList.add('sound-toggle--on');
+    }
+
+    audio.addEventListener('playing', function onFirstPlay() {
+      enableSound();
+      audio.removeEventListener('playing', onFirstPlay);
+    }, { once: true });
+
+    document.addEventListener('click', function unlock() {
+      if (!soundOn && viewHome.classList.contains('is-active')) {
+        audio.play().catch(() => {});
+        enableSound();
+      }
+      document.removeEventListener('click', unlock);
+    });
+
+    soundBtn.addEventListener('click', () => {
+      soundOn = !soundOn;
+      window._soundOn = soundOn;
+      audio.muted = !soundOn;
+      soundBtn.setAttribute('aria-label', soundOn ? 'Desativar som' : 'Ativar som');
+      soundBtn.setAttribute('aria-pressed', String(soundOn));
+      soundBtn.classList.toggle('sound-toggle--on', soundOn);
+      if (soundOn) audio.play().catch(() => {});
+    });
+
+    // ── Fullscreen ─────────────────────────────────────────
+    const fsBtn = document.getElementById('fullscreen-btn');
+
+    function updateFS() {
+      const on = !!document.fullscreenElement;
+      fsBtn.classList.toggle('is-active', on);
+      fsBtn.setAttribute('aria-pressed', String(on));
+      fsBtn.setAttribute('aria-label', on ? 'Sair da tela cheia' : 'Entrar em tela cheia');
+    }
+
+    fsBtn.addEventListener('click', () => {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      } else {
+        document.exitFullscreen().catch(() => {});
+      }
+    });
+
+    document.addEventListener('fullscreenchange', updateFS);
+
+    // ── Copiar código (expediente) ─────────────────────────
+    const btnCopy = document.getElementById('btn-copy');
+    if (btnCopy) {
+      btnCopy.addEventListener('click', () => {
+        const code = document.getElementById('pix-code').textContent.trim();
+        navigator.clipboard.writeText(code).then(() => {
+          btnCopy.textContent = 'Copiado!';
+          setTimeout(() => { btnCopy.textContent = 'Copiar'; }, 2000);
+        }).catch(() => {});
+      });
+    }
+
+  })();
+  </script>
+
+  <script>
+    // ── Spotify IFrame API — sincroniza com a música de fundo ──
+    window.onSpotifyIframeApiReady = function (IFrameAPI) {
+      var el = document.getElementById('spotify-player');
+      if (!el) return;
+      IFrameAPI.createController(el, {
+        uri: 'spotify:playlist:1ySuRW3FxpQWpGxDCYQ7X3',
+        height: 80
+      }, function (ctrl) {
+        ctrl.addListener('playback_update', function (e) {
+          var bg = document.getElementById('bg-music');
+          if (bg) {
+            if (!e.data.isPaused) {
+              bg.pause();
+            } else {
+              if (window._soundOn) bg.play().catch(function () {});
+            }
+          }
+          if (!e.data.isPaused) {
+            if (typeof window.startQ7Animation === 'function') window.startQ7Animation();
+          } else {
+            if (typeof window.stopQ7Animation === 'function') window.stopQ7Animation();
+          }
+        });
+      });
+    };
+  </script>
+
+  <script>
+  (function () {
+    var art = document.getElementById('q7-animated');
+    if (!art) return;
+    var frames = art.querySelectorAll('.q7-frame');
+    var step = 0;
+    var pending = null;
+    var running = false;
+
+    function setVisible(index) {
+      frames.forEach(function (f, i) { f.style.opacity = i === index ? '1' : '0'; });
+    }
+
+    function tick() {
+      step++;
+      if (step >= frames.length) { running = false; return; }
+      setVisible(step);
+      if (step < frames.length - 1) {
+        pending = setTimeout(tick, 2000);
+      } else {
+        running = false;
+      }
+    }
+
+    function reset() {
+      running = false;
+      if (pending) { clearTimeout(pending); pending = null; }
+      step = 0;
+      setVisible(0);
+    }
+
+    window.startQ7Animation = function () {
+      if (running || step >= frames.length - 1) return;
+      running = true;
+      pending = setTimeout(tick, 2000);
+    };
+
+    window.stopQ7Animation = function () {
+      running = false;
+      if (pending) { clearTimeout(pending); pending = null; }
+    };
+
+    ['btn-prev', 'btn-next', 'btn-back', 'btn-next-hint', 'btn-back-exp'].forEach(function (id) {
+      var btn = document.getElementById(id);
+      if (btn) btn.addEventListener('click', reset);
+    });
+  })();
+  </script>
+
+</body>
+</html>

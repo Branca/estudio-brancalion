@@ -9,10 +9,11 @@ const config: Config = {
     extend: {
       colors: {
         cream:        '#F5F2EC',
-        orange:       '#FF5F1F',
+        orange:       '#C94B4B',
         yellow:       '#F7E735',
         cyan:         '#00E5FF',
         ink:          '#1A1715',
+        'logo-blue':  '#474468',
         'gray-mid':   '#6B6864',
         'gray-light': '#B8B4AD',
         'gray-mist':  '#EDE9E2',

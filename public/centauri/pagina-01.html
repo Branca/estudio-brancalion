@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Centauri — Capítulo 1, Página 1. Tambabooks.">
+
+  <!-- ─ PARA DUPLICAR ESTA PÁGINA ─────────────────────────────
+       1. Copie este arquivo (ex: pagina-02.html)
+       2. Atualize os dois campos abaixo:
+  ──────────────────────────────────────────────────────────── -->
+  <title>Centauri · Cap. 1 · Pág. 1 — Tambabooks</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
+  <!-- Tokens compartilhados com a home -->
+  <link rel="stylesheet" href="css/style.css">
+  <!-- Estilos específicos do leitor -->
+  <link rel="stylesheet" href="css/reader.css">
+</head>
+<body class="reader-body">
+
+  <!-- ① FUNDO DA PÁGINA ──────────────────────────────────────
+       Arte de fundo que fica atrás de todos os quadros.
+       Trocar o gradiente no CSS (.page-bg) por:
+         background-image: url('assets/pages/p01-bg.jpg');
+  ──────────────────────────────────────────────────────────── -->
+  <div class="page-bg" aria-hidden="true">
+    <div class="page-bg__overlay"></div>
+  </div>
+
+  <div class="reader">
+
+    <!-- ② HEADER DO LEITOR ─────────────────────────────────── -->
+    <header class="reader-header">
+      <a href="index.html" class="reader-back" aria-label="Voltar para a capa">
+        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2.5"
+             stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 12H5M12 5l-7 7 7 7"/>
+        </svg>
+        Capa
+      </a>
+
+      <!-- ─ ATUALIZAR AO DUPLICAR ─────────────────────────── -->
+      <span class="reader-indicator" aria-label="Centauri, Capítulo 1, Página 1">
+        Centauri &nbsp;·&nbsp; Cap. 1 &nbsp;·&nbsp; Pág. 1
+      </span>
+
+      <a href="pagina-02.html" class="reader-next-hint" aria-label="Próxima página">
+        Próxima
+        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2.5"
+             stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 12h14M12 5l7 7-7 7"/>
+        </svg>
+      </a>
+    </header>
+
+    <!-- ③ GRID DE QUADROS ───────────────────────────────────
+         Estrutura fixa: 1 quadro de abertura + 3 menores.
+         Para trocar a arte de cada quadro, edite os
+         data-placeholder só para referência visual, ou
+         substitua .panel__art por <img> quando tiver arte.
+
+         Reorganização por breakpoint acontece 100% no CSS.
+    ──────────────────────────────────────────────────────── -->
+    <main class="panels-grid" role="main" aria-label="Página da história">
+
+      <!-- Quadro 1: abertura (ocupa largura toda em desktop e tablet) -->
+      <article class="panel panel--opening" aria-label="Quadro 1 — Abertura">
+        <div class="panel__art">
+          <!-- Trocar por: <img src="assets/pages/p01-q1.jpg" alt="[descrição do quadro]"> -->
+          <span class="panel__placeholder-label" aria-hidden="true">Q1 · ABERTURA</span>
+
+          <!-- Entretítulo superior esquerdo -->
+          <div class="panel-balloon panel-balloon--top-left" role="text">
+            <p><strong>Entretitulo Superior.</strong> Texto aqui.</p>
+          </div>
+
+          <!-- Entretítulo inferior direito -->
+          <div class="panel-balloon" role="text">
+            <p><strong>Enttetitulo Inicial.</strong> Inrodunao.</p>
+          </div>
+        </div>
+      </article>
+
+      <!-- Quadro 2 -->
+      <article class="panel panel--sm" aria-label="Quadro 2">
+        <div class="panel__art">
+          <span class="panel__placeholder-label" aria-hidden="true">Q2</span>
+
+          <!-- Balão de fala — Personagem 1 -->
+          <div class="panel-balloon panel-balloon--speech tail-bl pos-tl" role="text">
+            <p>Fala do Personagem 1</p>
+          </div>
+
+          <!-- Balão de fala — Personagem 2 -->
+          <div class="panel-balloon panel-balloon--speech tail-br pos-mr" role="text">
+            <p>Fala do Personagem 2</p>
+          </div>
+        </div>
+      </article>
+
+      <!-- Quadro 3 -->
+      <article class="panel panel--sm" aria-label="Quadro 3">
+        <div class="panel__art">
+          <span class="panel__placeholder-label" aria-hidden="true">Q3</span>
+
+          <!-- Um único balão de fala -->
+          <div class="panel-balloon panel-balloon--speech tail-bl pos-tl" role="text">
+            <p>Fala do Personagem 1</p>
+          </div>
+        </div>
+      </article>
+
+      <!-- Quadro 4 -->
+      <article class="panel panel--sm" aria-label="Quadro 4">
+        <div class="panel__art">
+          <span class="panel__placeholder-label" aria-hidden="true">Q4</span>
+
+          <!-- Balão 1 — topo esquerdo -->
+          <div class="panel-balloon panel-balloon--speech tail-bl pos-tl" role="text">
+            <p>Fala do Personagem 1</p>
+          </div>
+
+          <!-- Balão 2 — topo direito -->
+          <div class="panel-balloon panel-balloon--speech tail-br pos-tr" role="text">
+            <p>Fala do Personagem 2</p>
+          </div>
+
+          <!-- Balão 3 — centro esquerdo -->
+          <div class="panel-balloon panel-balloon--speech tail-ul pos-bl" role="text">
+            <p>Fala do Personagem 3</p>
+          </div>
+        </div>
+      </article>
+
+    </main>
+
+    <!-- Barra de controles: fullscreen -->
+    <div class="ui-controls">
+      <button class="ui-btn fullscreen-btn" id="fullscreen-btn"
+              aria-label="Entrar em tela cheia" aria-pressed="false"
+              title="Tela cheia">
+        <svg class="icon-expand" aria-hidden="true" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M8 3H5a2 2 0 0 0-2 2v3"/>
+          <path d="M21 8V5a2 2 0 0 0-2-2h-3"/>
+          <path d="M3 16v3a2 2 0 0 0 2 2h3"/>
+          <path d="M16 21h3a2 2 0 0 0 2-2v-3"/>
+        </svg>
+        <svg class="icon-compress" aria-hidden="true" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M8 3v3a2 2 0 0 1-2 2H3"/>
+          <path d="M21 8h-3a2 2 0 0 1-2-2V3"/>
+          <path d="M3 16h3a2 2 0 0 1 2 2v3"/>
+          <path d="M16 21v-3a2 2 0 0 1 2-2h3"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- ④ NAVEGAÇÃO ENTRE PÁGINAS ──────────────────────────
+         ─ ATUALIZAR AO DUPLICAR ─────────────────────────────
+         Ajuste os hrefs de prev/next a cada nova página.
+         Na primeira página, desative o botão "anterior"
+         adicionando a classe .is-disabled e aria-disabled="true".
+    ──────────────────────────────────────────────────────── -->
+    <nav class="page-nav" aria-label="Navegação de páginas">
+      <a href="index.html" class="page-nav__btn page-nav__btn--prev is-disabled"
+         aria-disabled="true" tabindex="-1">
+        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2.5"
+             stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 12H5M12 5l-7 7 7 7"/>
+        </svg>
+        Anterior
+      </a>
+
+      <a href="pagina-02.html" class="page-nav__btn page-nav__btn--next">
+        Próxima
+        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2.5"
+             stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 12h14M12 5l7 7-7 7"/>
+        </svg>
+      </a>
+    </nav>
+
+    <footer class="cover__footer">
+      <p class="cover__copyright">Direitos Reservados. Tambabooks 2026</p>
+      <a href="#" class="publisher-logo" aria-label="Tambabooks">
+        <svg class="publisher-logo__icon" viewBox="0 0 32 32" fill="currentColor" aria-hidden="true">
+          <rect x="4" y="4" width="24" height="24" rx="3" fill="none"
+                stroke="currentColor" stroke-width="2"/>
+          <rect x="10" y="10" width="12" height="2"/>
+          <rect x="15" y="10" width="2" height="12"/>
+        </svg>
+        <span class="publisher-logo__name">TAMBABOOKS</span>
+      </a>
+    </footer>
+
+  </div><!-- /reader -->
+
+  <script>
+    (function () {
+      const btn = document.getElementById('fullscreen-btn');
+
+      function update() {
+        const on = !!document.fullscreenElement;
+        btn.classList.toggle('is-active', on);
+        btn.setAttribute('aria-pressed', String(on));
+        btn.setAttribute('aria-label', on ? 'Sair da tela cheia' : 'Entrar em tela cheia');
+      }
+
+      btn.addEventListener('click', () => {
+        if (!document.fullscreenElement) {
+          document.documentElement.requestFullscreen().catch(() => {});
+        } else {
+          document.exitFullscreen().catch(() => {});
+        }
+      });
+
+      document.addEventListener('fullscreenchange', update);
+
+      // Restaura fullscreen se veio da home com ele ativo
+      if (sessionStorage.getItem('fullscreen') === '1') {
+        sessionStorage.removeItem('fullscreen');
+        document.documentElement.requestFullscreen().catch(() => {});
+      }
+    })();
+  </script>
+
+</body>
+</html>
