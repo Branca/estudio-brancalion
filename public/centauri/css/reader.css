@@ -647,6 +647,7 @@
   position: fixed;   /* fixo para cobrir o viewport durante o scroll */
   inset: 0;
   z-index: 0;
+  pointer-events: none; /* só decorativo: não bloqueia cliques em Anterior/Capa */
   background-image: url('../assets/images/bkg-space03.png');
   background-size: cover;
   background-position: center;

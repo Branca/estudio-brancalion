@@ -128,6 +128,7 @@
           Centauri &nbsp;·&nbsp; Cap. 1 &nbsp;·&nbsp; Pág. 1
         </span>
 
+        <!-- TODO: da pág. 4 este botão vai direto ao expediente; voltar para a pág. 5 quando estiver pronta (PAGE_ORDER no script) -->
         <button class="reader-next-hint" id="btn-next-hint" aria-label="Próxima página">
           Próxima
           <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -398,6 +399,7 @@
         <!-- ─────────────────────────────────────────────────
              PÁGINA 5 — Cap. 2, pág. 1 (placeholder)
         ───────────────────────────────────────────────────── -->
+        <!-- TODO: página-esqueleto — fora da ordem de leitura (PAGE_ORDER no script). Reincluir quando estiver pronta. -->
         <article class="reader-page" data-page="5" aria-label="Página 5">
 
           <div class="panels-grid panels-grid--inverted">
@@ -436,6 +438,7 @@
         <!-- ─────────────────────────────────────────────────
              PÁGINA 6 — Cap. 2, pág. 2 (placeholder)
         ───────────────────────────────────────────────────── -->
+        <!-- TODO: página-esqueleto — fora da ordem de leitura (PAGE_ORDER no script). Reincluir quando estiver pronta. -->
         <article class="reader-page" data-page="6" aria-label="Página 6">
 
           <div class="panels-grid">
@@ -474,6 +477,7 @@
         <!-- ─────────────────────────────────────────────────
              PÁGINA 7 — Cap. 2, pág. 3 (placeholder)
         ───────────────────────────────────────────────────── -->
+        <!-- TODO: página-esqueleto — fora da ordem de leitura (PAGE_ORDER no script). Reincluir quando estiver pronta. -->
         <article class="reader-page" data-page="7" aria-label="Página 7">
 
           <div class="panels-grid panels-grid--inverted">
@@ -512,6 +516,7 @@
         <!-- ─────────────────────────────────────────────────
              PÁGINA 8 — Cap. 2, pág. 4 (placeholder)
         ───────────────────────────────────────────────────── -->
+        <!-- TODO: página-esqueleto — fora da ordem de leitura (PAGE_ORDER no script). Reincluir quando estiver pronta. -->
         <article class="reader-page" data-page="8" aria-label="Página 8">
 
           <div class="panels-grid">
@@ -609,6 +614,7 @@
 
       <!-- Navegação prev / next -->
       <nav class="page-nav" aria-label="Navegação de páginas">
+        <!-- TODO: no expediente, "Anterior" volta para a pág. 4; voltar para a pág. 8 quando estiver pronta (PAGE_ORDER no script) -->
         <button class="page-nav__btn page-nav__btn--prev is-disabled"
                 id="btn-prev" aria-disabled="true" aria-label="Página anterior">
           <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -618,6 +624,7 @@
           Anterior
         </button>
 
+        <!-- TODO: da pág. 4 este botão vai direto ao expediente; voltar para a pág. 5 quando estiver pronta (PAGE_ORDER no script) -->
         <button class="page-nav__btn page-nav__btn--next"
                 id="btn-next" aria-label="Próxima página">
           Próxima
@@ -649,6 +656,10 @@
 
     // ── Configuração ───────────────────────────────────────
     const TOTAL_PAGES = 9; // 4 págs. Cap.1 + 4 págs. Cap.2 + expediente
+    // Ordem de leitura (data-page). As págs. 5–8 (Cap. 2) ainda são esqueleto e
+    // ficam de fora: da pág. 4 vai direto ao expediente (9).
+    // TODO: voltar para [1, 2, 3, 4, 5, 6, 7, 8, 9] quando as págs. 5–8 estiverem prontas.
+    const PAGE_ORDER = [1, 2, 3, 4, 9];
 
     // ── Elementos ──────────────────────────────────────────
     const viewHome    = document.getElementById('view-home');
@@ -683,7 +694,7 @@
 
     // ── Navegação de páginas ───────────────────────────────
     function goToPage(n) {
-      n = Math.max(1, Math.min(TOTAL_PAGES, n));
+      if (!PAGE_ORDER.includes(n)) n = PAGE_ORDER[0];
 
       pages.forEach(p => p.classList.remove('is-active'));
       document.querySelector(`.reader-page[data-page="${n}"]`).classList.add('is-active');
@@ -698,8 +709,8 @@
         ? `Centauri &nbsp;&middot;&nbsp; Cap. ${chapLabel} &nbsp;&middot;&nbsp; Pág. ${chapPage}`
         : `Centauri &nbsp;&middot;&nbsp; Expediente`;
 
-      const atFirst = n === 1;
-      const atLast  = n === TOTAL_PAGES;
+      const atFirst = n === PAGE_ORDER[0];
+      const atLast  = n === PAGE_ORDER[PAGE_ORDER.length - 1];
       btnPrev.classList.toggle('is-disabled', atFirst);
       btnPrev.setAttribute('aria-disabled', String(atFirst));
       btnNext.classList.toggle('is-disabled', atLast);
@@ -713,9 +724,14 @@
     btnRead.addEventListener('click', () => { showReader(); goToPage(1); });
     btnBack.addEventListener('click', showHome);
     document.getElementById('btn-back-exp').addEventListener('click', showHome);
-    btnPrev.addEventListener('click', () => { if (currentPage > 1) goToPage(currentPage - 1); });
-    btnNext.addEventListener('click', () => { if (currentPage < TOTAL_PAGES) goToPage(currentPage + 1); });
-    btnNextHint.addEventListener('click', () => { if (currentPage < TOTAL_PAGES) goToPage(currentPage + 1); });
+    // Avança/volta seguindo PAGE_ORDER (pula as páginas-esqueleto)
+    function stepPage(delta) {
+      const i = PAGE_ORDER.indexOf(currentPage) + delta;
+      if (i >= 0 && i < PAGE_ORDER.length) goToPage(PAGE_ORDER[i]);
+    }
+    btnPrev.addEventListener('click', () => stepPage(-1));
+    btnNext.addEventListener('click', () => stepPage(1));
+    btnNextHint.addEventListener('click', () => stepPage(1));
 
     // ── Som ────────────────────────────────────────────────
     const audio    = document.getElementById('bg-music');
